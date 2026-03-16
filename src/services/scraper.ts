@@ -41,6 +41,13 @@ export interface ScrapeResult {
 
 export async function scrapeCompetitor(competitor: ScraperInput): Promise<ScrapeResult> {
   const browserInstance = await getBrowser();
+  
+  // TODO: Add VPN/proxy support to avoid IP blocks
+  // Options:
+  // 1. Use playwright's proxy option: { proxy: { server: 'http://vpn-server:port' } }
+  // 2. Use residential proxies (Bright Data, Oxylabs, etc.)
+  // 3. Rotate VPN connections for each scrape
+  
   const page = await browserInstance.newPage();
   
   try {

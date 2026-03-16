@@ -78,6 +78,9 @@ src/
 | `DATABASE_PATH` | SQLite file path | No |
 | `RESEND_API_KEY` | Resend API key | Yes (for emails) |
 | `PUBLIC_URL` | Base URL for public reports | No |
+| `PROXY_SERVER` | Proxy server for scraping | Recommended |
+| `PROXY_USER` | Proxy username | If proxy requires auth |
+| `PROXY_PASS` | Proxy password | If proxy requires auth |
 
 ## Development
 
