@@ -18,7 +18,7 @@ export async function closeBrowser(): Promise<void> {
   }
 }
 
-interface CompetitorInfo {
+export interface ScraperInput {
   id: string;
   name: string;
   url: string;
@@ -30,7 +30,7 @@ interface CompetitorInfo {
   };
 }
 
-interface ScrapeResult {
+export interface ScrapeResult {
   price?: string;
   features?: string[];
   name?: string;
@@ -39,8 +39,15 @@ interface ScrapeResult {
   url: string;
 }
 
-export async function scrapeCompetitor(competitor: CompetitorInfo): Promise<ScrapeResult> {
+export async function scrapeCompetitor(competitor: ScraperInput): Promise<ScrapeResult> {
   const browserInstance = await getBrowser();
+  
+  // TODO: Add VPN/proxy support to avoid IP blocks
+  // Options:
+  // 1. Use playwright's proxy option: { proxy: { server: 'http://vpn-server:port' } }
+  // 2. Use residential proxies (Bright Data, Oxylabs, etc.)
+  // 3. Rotate VPN connections for each scrape
+  
   const page = await browserInstance.newPage();
   
   try {

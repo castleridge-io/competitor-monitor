@@ -1,0 +1,91 @@
+import { sqliteTable, text, integer } from 'drizzle-orm/sqlite-core';
+import { relations } from 'drizzle-orm';
+
+// Competitors table
+export const competitors = sqliteTable('competitors', {
+  id: text('id').primaryKey(),
+  name: text('name').notNull(),
+  url: text('url').notNull(),
+  selectors: text('selectors'), // JSON string
+  createdAt: integer('created_at', { mode: 'timestamp' }).notNull(),
+  updatedAt: integer('updated_at', { mode: 'timestamp' }).notNull(),
+});
+
+// Scrapes table
+export const scrapes = sqliteTable('scrapes', {
+  id: text('id').primaryKey(),
+  competitorId: text('competitor_id').notNull().references(() => competitors.id),
+  data: text('data').notNull(), // JSON string
+  scrapedAt: integer('scraped_at', { mode: 'timestamp' }).notNull(),
+});
+
+// Reports table
+export const reports = sqliteTable('reports', {
+  id: text('id').primaryKey(),
+  competitorId: text('competitor_id').notNull().references(() => competitors.id),
+  scrapeId: text('scrape_id').notNull().references(() => scrapes.id),
+  htmlContent: text('html_content').notNull(),
+  jsonData: text('json_data').notNull(), // JSON string
+  isPublic: integer('is_public', { mode: 'boolean' }).notNull().default(false),
+  createdAt: integer('created_at', { mode: 'timestamp' }).notNull(),
+});
+
+// Waitlist table
+export const waitlist = sqliteTable('waitlist', {
+  id: text('id').primaryKey(),
+  email: text('email').notNull().unique(),
+  createdAt: integer('created_at', { mode: 'timestamp' }).notNull(),
+});
+
+// Subscriptions table
+export const subscriptions = sqliteTable('competitor_subscriptions', {
+  id: text('id').primaryKey(),
+  email: text('email').notNull(),
+  competitorId: text('competitor_id').notNull().references(() => competitors.id),
+  createdAt: integer('created_at', { mode: 'timestamp' }).notNull(),
+});
+
+// Relations
+export const competitorsRelations = relations(competitors, ({ many }) => ({
+  scrapes: many(scrapes),
+  reports: many(reports),
+  subscriptions: many(subscriptions),
+}));
+
+export const scrapesRelations = relations(scrapes, ({ one, many }) => ({
+  competitor: one(competitors, {
+    fields: [scrapes.competitorId],
+    references: [competitors.id],
+  }),
+  reports: many(reports),
+}));
+
+export const reportsRelations = relations(reports, ({ one }) => ({
+  competitor: one(competitors, {
+    fields: [reports.competitorId],
+    references: [competitors.id],
+  }),
+  scrape: one(scrapes, {
+    fields: [reports.scrapeId],
+    references: [scrapes.id],
+  }),
+}));
+
+export const subscriptionsRelations = relations(subscriptions, ({ one }) => ({
+  competitor: one(competitors, {
+    fields: [subscriptions.competitorId],
+    references: [competitors.id],
+  }),
+}));
+
+// Type exports
+export type Competitor = typeof competitors.$inferSelect;
+export type NewCompetitor = typeof competitors.$inferInsert;
+export type Scrape = typeof scrapes.$inferSelect;
+export type NewScrape = typeof scrapes.$inferInsert;
+export type Report = typeof reports.$inferSelect;
+export type NewReport = typeof reports.$inferInsert;
+export type WaitlistEntry = typeof waitlist.$inferSelect;
+export type NewWaitlistEntry = typeof waitlist.$inferInsert;
+export type Subscription = typeof subscriptions.$inferSelect;
+export type NewSubscription = typeof subscriptions.$inferInsert;
