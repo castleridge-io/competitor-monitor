@@ -1,12 +1,11 @@
 import { Router } from 'express';
 import type { Router as RouterType } from 'express';
 import { v4 as uuidv4 } from 'uuid';
-import { getDb } from '../db/index.js';
+import { db } from '../db/index.js';
 import { reports, waitlist } from '../db/schema.js';
 import { eq, and } from 'drizzle-orm';
 
 const router: RouterType = Router();
-const db = getDb();
 
 // Public report page
 router.get('/reports/:id', async (req, res) => {

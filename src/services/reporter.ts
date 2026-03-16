@@ -1,8 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
-import { getDb } from '../db/index.js';
+import { db } from '../db/index.js';
 import { reports } from '../db/schema.js';
-
-const db = getDb();
 
 export interface ScrapeData {
   price?: string | string[];

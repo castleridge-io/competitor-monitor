@@ -1,14 +1,13 @@
 import { Router } from 'express';
 import type { Router as RouterType } from 'express';
 import { v4 as uuidv4 } from 'uuid';
-import { getDb } from '../db/index.js';
+import { db } from '../db/index.js';
 import { competitors, scrapes } from '../db/schema.js';
 import { eq, desc } from 'drizzle-orm';
 import { scrapeCompetitor, type ScraperInput } from '../services/scraper.js';
 import { generateReport, type ScrapeData } from '../services/reporter.js';
 
 const router: RouterType = Router();
-const db = getDb();
 
 // Trigger scrape for a competitor
 router.post('/:competitorId', async (req, res) => {
