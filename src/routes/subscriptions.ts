@@ -4,6 +4,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { getDb } from '../db/index.js';
 import { competitors, subscriptions } from '../db/schema.js';
 import { eq, desc, and } from 'drizzle-orm';
+import { isValidEmail, sanitizeString } from '../middleware/validation.js';
 
 const router: RouterType = Router();
 const db = getDb();
@@ -15,6 +16,13 @@ router.post('/', async (req, res) => {
   if (!email || !competitorId) {
     return res.status(400).json({ error: 'email and competitorId are required' });
   }
+  
+  // Validate email format
+  if (!isValidEmail(email)) {
+    return res.status(400).json({ error: 'Invalid email format' });
+  }
+  
+  const sanitizedEmail = sanitizeString(email.toLowerCase(), 255);
   
   // Check if competitor exists
   const competitorResult = await db.select().from(competitors).where(eq(competitors.id, competitorId));
@@ -29,7 +37,7 @@ router.post('/', async (req, res) => {
   try {
     await db.insert(subscriptions).values({
       id,
-      email,
+      email: sanitizedEmail,
       competitorId,
       createdAt: now,
     });
@@ -37,7 +45,7 @@ router.post('/', async (req, res) => {
     res.status(201).json({ 
       message: 'Subscribed to competitor updates',
       id,
-      email,
+      email: sanitizedEmail,
       competitorId 
     });
   } catch (error) {
@@ -57,9 +65,11 @@ router.delete('/', async (req, res) => {
     return res.status(400).json({ error: 'email and competitorId are required' });
   }
   
+  const sanitizedEmail = sanitizeString(email.toLowerCase(), 255);
+  
   await db.delete(subscriptions)
     .where(and(
-      eq(subscriptions.email, email),
+      eq(subscriptions.email, sanitizedEmail),
       eq(subscriptions.competitorId, competitorId)
     ));
   
@@ -68,7 +78,7 @@ router.delete('/', async (req, res) => {
 
 // Get subscriptions for an email
 router.get('/:email', async (req, res) => {
-  const { email } = req.params;
+  const sanitizedEmail = sanitizeString(req.params.email.toLowerCase(), 255);
   
   const result = await db.select({
     id: subscriptions.id,
@@ -78,7 +88,7 @@ router.get('/:email', async (req, res) => {
     competitorUrl: competitors.url,
   }).from(subscriptions)
     .innerJoin(competitors, eq(subscriptions.competitorId, competitors.id))
-    .where(eq(subscriptions.email, email))
+    .where(eq(subscriptions.email, sanitizedEmail))
     .orderBy(desc(subscriptions.createdAt));
   
   res.json(result);
