@@ -6,6 +6,7 @@ import competitorsRouter from './routes/competitors.js';
 import scrapeRouter from './routes/scrape.js';
 import reportsRouter from './routes/reports.js';
 import publicRouter from './routes/public.js';
+import subscriptionsRouter from './routes/subscriptions.js';
 
 config();
 
@@ -24,6 +25,7 @@ async function start() {
   app.use('/api/competitors', competitorsRouter);
   app.use('/api/scrape', scrapeRouter);
   app.use('/api/reports', reportsRouter);
+  app.use('/api/subscriptions', subscriptionsRouter);
   app.use('/public', publicRouter);
 
   // Health check

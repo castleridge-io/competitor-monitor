@@ -84,10 +84,21 @@ export async function initDatabase(): Promise<void> {
     )
   `);
   
+  database.run(`
+    CREATE TABLE IF NOT EXISTS competitor_subscriptions (
+      id TEXT PRIMARY KEY,
+      email TEXT NOT NULL,
+      competitor_id TEXT NOT NULL,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      UNIQUE(email, competitor_id)
+    )
+  `);
+  
   // Create indexes
   database.run(`CREATE INDEX IF NOT EXISTS idx_scrapes_competitor ON scrapes(competitor_id)`);
   database.run(`CREATE INDEX IF NOT EXISTS idx_scrapes_date ON scrapes(scraped_at)`);
   database.run(`CREATE INDEX IF NOT EXISTS idx_reports_public ON reports(is_public)`);
+  database.run(`CREATE INDEX IF NOT EXISTS idx_subscriptions_competitor ON competitor_subscriptions(competitor_id)`);
   
   saveDatabase();
   console.log('✅ Database initialized');
