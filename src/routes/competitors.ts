@@ -74,7 +74,7 @@ router.patch('/:id', async (req, res) => {
 
 // Delete competitor
 router.delete('/:id', async (req, res) => {
-  const result = await db.delete(competitors).where(eq(competitors.id, req.params.id));
+  await db.delete(competitors).where(eq(competitors.id, req.params.id));
   
   res.status(204).send();
 });

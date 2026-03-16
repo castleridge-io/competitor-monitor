@@ -8,7 +8,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { eq, desc } from 'drizzle-orm';
 
 const db = getDb();
-let scheduledJobs: Map<string, cron.ScheduledTask> = new Map();
+const scheduledJobs: Map<string, cron.ScheduledTask> = new Map();
 
 export function startScheduler(): void {
   // Daily scrape at 6 AM HKT (22:00 UTC)
