@@ -1,103 +1,126 @@
 import { Router } from 'express';
+import type { Router as RouterType } from 'express';
 import { v4 as uuidv4 } from 'uuid';
-import { getDatabase } from '../db/index.js';
+import { getDatabase, saveDatabase } from '../db/index.js';
 import type { Competitor, SelectorConfig } from '../models/index.js';
 
-const router = Router();
+const router: RouterType = Router();
 
 // List all competitors
-router.get('/', (_req, res) => {
-  const db = getDatabase();
-  const competitors = db.prepare(`
+router.get('/', async (_req, res) => {
+  const db = await getDatabase();
+  const result = db.exec(`
     SELECT id, name, url, selectors, created_at, updated_at 
     FROM competitors 
     ORDER BY created_at DESC
-  `).all() as Competitor[];
+  `);
+  
+  const competitors = result[0]?.values.map(row => ({
+    id: row[0],
+    name: row[1],
+    url: row[2],
+    selectors: row[3] ? JSON.parse(row[3] as string) : null,
+    createdAt: row[4],
+    updatedAt: row[5],
+  })) || [];
   
   res.json(competitors);
 });
 
 // Get single competitor
-router.get('/:id', (req, res) => {
-  const db = getDatabase();
-  const competitor = db.prepare(`
+router.get('/:id', async (req, res) => {
+  const db = await getDatabase();
+  const result = db.exec(`
     SELECT id, name, url, selectors, created_at, updated_at 
     FROM competitors 
     WHERE id = ?
-  `).get(req.params.id) as Competitor | undefined;
+  `, [req.params.id]);
   
-  if (!competitor) {
+  if (!result[0] || result[0].values.length === 0) {
     return res.status(404).json({ error: 'Competitor not found' });
   }
+  
+  const row = result[0].values[0];
+  const competitor = {
+    id: row[0],
+    name: row[1],
+    url: row[2],
+    selectors: row[3] ? JSON.parse(row[3] as string) : null,
+    createdAt: row[4],
+    updatedAt: row[5],
+  };
   
   res.json(competitor);
 });
 
 // Add competitor
-router.post('/', (req, res) => {
+router.post('/', async (req, res) => {
   const { name, url, selectors }: { name: string; url: string; selectors?: SelectorConfig } = req.body;
   
   if (!name || !url) {
     return res.status(400).json({ error: 'name and url are required' });
   }
   
-  const db = getDatabase();
+  const db = await getDatabase();
   const id = uuidv4();
+  const now = new Date().toISOString();
   
-  const stmt = db.prepare(`
-    INSERT INTO competitors (id, name, url, selectors)
-    VALUES (?, ?, ?, ?)
-  `);
+  db.run(`
+    INSERT INTO competitors (id, name, url, selectors, created_at, updated_at)
+    VALUES (?, ?, ?, ?, ?, ?)
+  `, [id, name, url, selectors ? JSON.stringify(selectors) : null, now, now]);
   
-  stmt.run(id, name, url, selectors ? JSON.stringify(selectors) : null);
+  saveDatabase();
   
-  const competitor = db.prepare('SELECT * FROM competitors WHERE id = ?').get(id);
-  res.status(201).json(competitor);
+  res.status(201).json({ id, name, url, selectors, createdAt: now, updatedAt: now });
 });
 
 // Update competitor
-router.patch('/:id', (req, res) => {
+router.patch('/:id', async (req, res) => {
   const { name, url, selectors }: { name?: string; url?: string; selectors?: SelectorConfig } = req.body;
-  const db = getDatabase();
+  const db = await getDatabase();
   
-  const updates: string[] = [];
-  const values: (string | null)[] = [];
+  const now = new Date().toISOString();
   
   if (name) {
-    updates.push('name = ?');
-    values.push(name);
+    db.run('UPDATE competitors SET name = ?, updated_at = ? WHERE id = ?', [name, now, req.params.id]);
   }
   if (url) {
-    updates.push('url = ?');
-    values.push(url);
+    db.run('UPDATE competitors SET url = ?, updated_at = ? WHERE id = ?', [url, now, req.params.id]);
   }
   if (selectors) {
-    updates.push('selectors = ?');
-    values.push(JSON.stringify(selectors));
+    db.run('UPDATE competitors SET selectors = ?, updated_at = ? WHERE id = ?', [JSON.stringify(selectors), now, req.params.id]);
   }
   
-  if (updates.length === 0) {
-    return res.status(400).json({ error: 'No fields to update' });
+  saveDatabase();
+  
+  const result = db.exec('SELECT * FROM competitors WHERE id = ?', [req.params.id]);
+  if (!result[0] || result[0].values.length === 0) {
+    return res.status(404).json({ error: 'Competitor not found' });
   }
   
-  updates.push('updated_at = CURRENT_TIMESTAMP');
-  values.push(req.params.id);
-  
-  const stmt = db.prepare(`UPDATE competitors SET ${updates.join(', ')} WHERE id = ?`);
-  stmt.run(...values);
-  
-  const competitor = db.prepare('SELECT * FROM competitors WHERE id = ?').get(req.params.id);
-  res.json(competitor);
+  const row = result[0].values[0];
+  res.json({
+    id: row[0],
+    name: row[1],
+    url: row[2],
+    selectors: row[3] ? JSON.parse(row[3] as string) : null,
+    createdAt: row[4],
+    updatedAt: row[5],
+  });
 });
 
 // Delete competitor
-router.delete('/:id', (req, res) => {
-  const db = getDatabase();
-  const result = db.prepare('DELETE FROM competitors WHERE id = ?').run(req.params.id);
+router.delete('/:id', async (req, res) => {
+  const db = await getDatabase();
+  const result = db.exec('SELECT id FROM competitors WHERE id = ?', [req.params.id]);
   
-  if (result.changes === 0) {
+  if (!result[0] || result[0].values.length === 0) {
     return res.status(404).json({ error: 'Competitor not found' });
   }
+  
+  db.run('DELETE FROM competitors WHERE id = ?', [req.params.id]);
+  saveDatabase();
   
   res.status(204).send();
 });

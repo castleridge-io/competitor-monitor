@@ -1,5 +1,5 @@
 import { v4 as uuidv4 } from 'uuid';
-import { getDatabase } from '../db/index.js';
+import { getDatabase, saveDatabase } from '../db/index.js';
 import type { Report, ScrapeData } from '../models/index.js';
 
 export async function generateReport(
@@ -7,27 +7,37 @@ export async function generateReport(
   scrapeId: string,
   data: ScrapeData
 ): Promise<Report> {
-  const db = getDatabase();
+  const db = await getDatabase();
   const id = uuidv4();
+  const now = new Date().toISOString();
   
   // Generate HTML report
   const htmlContent = generateHtmlReport(data);
   
   // Store report
-  db.prepare(`
-    INSERT INTO reports (id, competitor_id, scrape_id, html_content, json_data, is_public)
-    VALUES (?, ?, ?, ?, ?, ?)
-  `).run(id, competitorId, scrapeId, htmlContent, JSON.stringify(data), 0);
+  db.run(`
+    INSERT INTO reports (id, competitor_id, scrape_id, html_content, json_data, is_public, created_at)
+    VALUES (?, ?, ?, ?, ?, ?, ?)
+  `, [id, competitorId, scrapeId, htmlContent, JSON.stringify(data), 0, now]);
   
-  const report = db.prepare('SELECT * FROM reports WHERE id = ?').get(id) as Report;
-  return report;
+  saveDatabase();
+  
+  return {
+    id,
+    competitorId,
+    scrapeId,
+    htmlContent,
+    jsonData: data,
+    isPublic: false,
+    createdAt: new Date(now),
+  };
 }
 
 function generateHtmlReport(data: ScrapeData): string {
   const features = data.features || [];
-  const price = data.price || 'Not found';
-  const name = data.name || 'Unknown';
-  const url = data.url || '';
+  const price = (data.price as string) || 'Not found';
+  const name = (data.name as string) || 'Unknown';
+  const url = (data.url as string) || '';
   
   return `<!DOCTYPE html>
 <html lang="en">

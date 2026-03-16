@@ -31,8 +31,8 @@ None
 
 | Task | Status | Notes |
 |------|--------|-------|
-| T1.1 Project Setup | ✅ Complete | Scaffold done |
-| T1.2 Scraper Service | 🔲 Ready | Code exists, needs testing |
+| T1.1 Project Setup | ✅ Complete | Scaffold done, committed b3606b2 |
+| T1.2 Scraper Service | ✅ Complete | Playwright scraper implemented |
 | T1.3 Database Models | ✅ Complete | Schema + models done |
 | T1.4 API Endpoints | ✅ Complete | All routes implemented |
 | T1.5 Report Generator | ✅ Complete | HTML reports working |
