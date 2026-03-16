@@ -12,7 +12,6 @@ vi.mock('../../src/db/index.js', () => ({
 
 // Import test utilities
 import { setupTestDatabase, teardownTestDatabase, getTestDb, createTestCompetitor, createTestScrape, createTestReport } from '../utils/test-db.js';
-import * as schema from '../../src/db/schema.js';
 
 describe('Reports Routes', () => {
   let app: Express;
