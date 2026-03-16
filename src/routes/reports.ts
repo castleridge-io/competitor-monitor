@@ -1,10 +1,11 @@
 import { Router } from 'express';
 import type { Router as RouterType } from 'express';
-import { db } from '../db/index.js';
+import { getDb } from '../db/index.js';
 import { reports } from '../db/schema.js';
 import { eq, desc } from 'drizzle-orm';
 
 const router: RouterType = Router();
+const db = getDb();
 
 // Get report by ID
 router.get('/:id', async (req, res) => {

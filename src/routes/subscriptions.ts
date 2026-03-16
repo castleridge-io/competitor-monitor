@@ -1,11 +1,12 @@
 import { Router } from 'express';
 import type { Router as RouterType } from 'express';
 import { v4 as uuidv4 } from 'uuid';
-import { db } from '../db/index.js';
+import { getDb } from '../db/index.js';
 import { competitors, subscriptions } from '../db/schema.js';
 import { eq, desc, and } from 'drizzle-orm';
 
 const router: RouterType = Router();
+const db = getDb();
 
 // Subscribe to competitor updates
 router.post('/', async (req, res) => {

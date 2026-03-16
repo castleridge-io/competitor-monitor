@@ -1,5 +1,5 @@
 import cron from 'node-cron';
-import { db } from '../db/index.js';
+import { getDb } from '../db/index.js';
 import { competitors, scrapes, subscriptions } from '../db/schema.js';
 import { scrapeCompetitor, type ScraperInput } from './scraper.js';
 import { generateReport, type ScrapeData } from './reporter.js';
@@ -7,6 +7,7 @@ import { sendChangeAlert } from './emailer.js';
 import { v4 as uuidv4 } from 'uuid';
 import { eq, desc } from 'drizzle-orm';
 
+const db = getDb();
 let scheduledJobs: Map<string, cron.ScheduledTask> = new Map();
 
 export function startScheduler(): void {

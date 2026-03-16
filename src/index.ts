@@ -2,11 +2,6 @@ import express, { Request, Response, NextFunction } from 'express';
 import cors from 'cors';
 import { config } from 'dotenv';
 import { initDatabase } from './db/index.js';
-import competitorsRouter from './routes/competitors.js';
-import scrapeRouter from './routes/scrape.js';
-import reportsRouter from './routes/reports.js';
-import publicRouter from './routes/public.js';
-import subscriptionsRouter from './routes/subscriptions.js';
 
 config();
 
@@ -20,6 +15,13 @@ app.use(express.json());
 // Initialize database and start server
 async function start() {
   await initDatabase();
+  
+  // Import routes AFTER database is initialized
+  const { default: competitorsRouter } = await import('./routes/competitors.js');
+  const { default: scrapeRouter } = await import('./routes/scrape.js');
+  const { default: reportsRouter } = await import('./routes/reports.js');
+  const { default: subscriptionsRouter } = await import('./routes/subscriptions.js');
+  const { default: publicRouter } = await import('./routes/public.js');
   
   // Routes
   app.use('/api/competitors', competitorsRouter);

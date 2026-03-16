@@ -1,11 +1,12 @@
 import { Router } from 'express';
 import type { Router as RouterType } from 'express';
 import { v4 as uuidv4 } from 'uuid';
-import { db } from '../db/index.js';
+import { getDb } from '../db/index.js';
 import { competitors } from '../db/schema.js';
 import { eq } from 'drizzle-orm';
 
 const router: RouterType = Router();
+const db = getDb();
 
 // List all competitors
 router.get('/', async (_req, res) => {

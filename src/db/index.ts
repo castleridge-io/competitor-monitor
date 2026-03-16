@@ -12,20 +12,12 @@ let SQL: SqlJsStatic | null = null;
 let sqlite: Database | null = null;
 let dbInstance: ReturnType<typeof drizzle<typeof schema>> | null = null;
 
-// Lazy getter that initializes on first use
 export function getDb() {
   if (!dbInstance) {
     throw new Error('Database not initialized. Call initDatabase() first.');
   }
   return dbInstance;
 }
-
-// Proxy that allows using db at module load time but defers to actual instance
-export const db = new Proxy({} as ReturnType<typeof drizzle<typeof schema>>, {
-  get(target, prop) {
-    return Reflect.get(getDb(), prop);
-  }
-});
 
 function saveDatabase(): void {
   if (sqlite) {
