@@ -39,14 +39,14 @@ None
 | T2.1 Email Alerts | ✅ Complete | Resend integration ready |
 | T2.2 Scheduler | ✅ Complete | Daily cron set up |
 | T2.3 Public Pages | ✅ Complete | Route ready |
-| T3.1 Landing Integration | 🔲 Ready | Need to connect form |
+| T3.1 Landing Integration | ✅ Complete | Form connected to /public/waitlist |
 | T3.2 Deployment | 🔲 Blocked | Need VPS access |
 | T3.3 Viral Reports | 🔲 Blocked | After deployment |
 
 ---
 
 ## Metrics
-- Tasks complete: 8/12
-- Time spent: ~2h (scaffolding)
+- Tasks complete: 9/12
+- Time spent: ~2h (scaffolding) + 1h (tests)
 - MRR: $0
 - Waitlist: 0
