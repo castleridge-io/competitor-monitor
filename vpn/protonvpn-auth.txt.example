@@ -1,0 +1,11 @@
+# Proton VPN OpenVPN Credentials
+# 
+# Get these from: account.protonvpn.com > Settings > OpenVPN / IKEv2 credentials
+# These are DIFFERENT from your Proton account login!
+
+# Format:
+# username
+# password
+
+YOUR_OPENVPN_USERNAME_HERE
+YOUR_OPENVPN_PASSWORD_HERE

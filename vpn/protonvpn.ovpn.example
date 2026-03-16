@@ -1,0 +1,29 @@
+# Proton VPN OpenVPN Configuration
+# 
+# Instructions:
+# 1. Log in to account.protonvpn.com
+# 2. Download OpenVPN config for your chosen server
+# 3. Copy the content here OR replace this file with the downloaded .ovpn
+# 4. Add your OpenVPN username/password (from Proton VPN account settings)
+#
+# Note: Proton VPN OpenVPN credentials are DIFFERENT from your account login
+# Find them at: account.protonvpn.com > Settings > OpenVPN / IKEv2 credentials
+
+client
+dev tun
+proto udp
+remote SERVER_ADDRESS 1194
+resolv-retry infinite
+nobind
+auth-user-pass /etc/openvpn/protonvpn-auth.txt
+ca /etc/openvpn/protonvpn-ca.crt
+tls-crypt /etc/openvpn/protonvpn-tls.key
+cipher AES-256-GCM
+auth SHA512
+verb 3
+
+# Replace SERVER_ADDRESS with actual Proton VPN server
+# Examples (free tier):
+# - us-free-01.protonvpn.com
+# - nl-free-01.protonvpn.com
+# - jp-free-01.protonvpn.com

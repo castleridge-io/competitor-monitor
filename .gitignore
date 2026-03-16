@@ -16,6 +16,11 @@ dist/
 *.sqlite
 *.sqlite3
 
+# VPN (sensitive)
+vpn/protonvpn-auth.txt
+vpn/*.ovpn
+!vpn/*.example
+
 # Logs
 logs/
 *.log
