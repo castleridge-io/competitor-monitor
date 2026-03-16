@@ -1,11 +1,13 @@
 import cron from 'node-cron';
-import { getDatabase, saveDatabase } from '../db/index.js';
-import { scrapeCompetitor } from './scraper.js';
-import { generateReport } from './reporter.js';
+import { getDb } from '../db/index.js';
+import { competitors, scrapes, subscriptions } from '../db/schema.js';
+import { scrapeCompetitor, type ScraperInput } from './scraper.js';
+import { generateReport, type ScrapeData } from './reporter.js';
 import { sendChangeAlert } from './emailer.js';
 import { v4 as uuidv4 } from 'uuid';
-import type { Competitor, ScrapeData } from '../models/index.js';
+import { eq, desc } from 'drizzle-orm';
 
+const db = getDb();
 let scheduledJobs: Map<string, cron.ScheduledTask> = new Map();
 
 export function startScheduler(): void {
@@ -30,58 +32,55 @@ export function stopScheduler(): void {
 }
 
 export async function scrapeAllCompetitors(): Promise<void> {
-  const db = await getDatabase();
+  // Get all competitors
+  const allCompetitors = await db.select().from(competitors);
   
-  // Get all competitors using sql.js API
-  const result = db.exec('SELECT * FROM competitors');
-  
-  if (!result[0] || result[0].values.length === 0) {
+  if (allCompetitors.length === 0) {
     console.log('📊 No competitors found to scrape');
     return;
   }
   
-  const competitors: Competitor[] = result[0].values.map(row => ({
-    id: row[0] as string,
-    name: row[1] as string,
-    url: row[2] as string,
-    selectors: row[3] ? JSON.parse(row[3] as string) : undefined,
-    createdAt: new Date(row[4] as string),
-    updatedAt: new Date(row[5] as string),
-  }));
+  console.log(`📊 Found ${allCompetitors.length} competitors to scrape`);
   
-  console.log(`📊 Found ${competitors.length} competitors to scrape`);
-  
-  for (const competitor of competitors) {
+  for (const competitor of allCompetitors) {
     try {
       console.log(`🔍 Scraping ${competitor.name}...`);
       
-      const scrapeData = await scrapeCompetitor(competitor) as unknown as ScrapeData;
+      // Parse selectors from JSON string and build scraper input
+      const scraperInput: ScraperInput = {
+        id: competitor.id,
+        name: competitor.name,
+        url: competitor.url,
+        selectors: competitor.selectors ? JSON.parse(competitor.selectors) : undefined,
+      };
+      
+      const scrapeData = await scrapeCompetitor(scraperInput) as ScrapeData;
       
       // Store scrape
       const scrapeId = uuidv4();
-      const now = new Date().toISOString();
-      db.run(`
-        INSERT INTO scrapes (id, competitor_id, data, scraped_at)
-        VALUES (?, ?, ?, ?)
-      `, [scrapeId, competitor.id, JSON.stringify(scrapeData), now]);
+      const now = new Date();
       
-      // Check for changes
-      const lastScrapeResult = db.exec(`
-        SELECT data FROM scrapes 
-        WHERE competitor_id = ? AND id != ?
-        ORDER BY scraped_at DESC 
-        LIMIT 1
-      `, [competitor.id, scrapeId]);
+      await db.insert(scrapes).values({
+        id: scrapeId,
+        competitorId: competitor.id,
+        data: JSON.stringify(scrapeData),
+        scrapedAt: now,
+      });
       
-      if (lastScrapeResult[0] && lastScrapeResult[0].values.length > 0) {
-        const lastData = JSON.parse(lastScrapeResult[0].values[0][0] as string) as ScrapeData;
+      // Check for changes - get previous scrapes
+      const previousScrapes = await db.select()
+        .from(scrapes)
+        .where(eq(scrapes.competitorId, competitor.id))
+        .orderBy(desc(scrapes.scrapedAt))
+        .limit(2);  // Get 2, skip the one we just inserted
+      
+      if (previousScrapes.length > 1) {
+        const lastData = JSON.parse(previousScrapes[1].data) as ScrapeData;
         await detectAndAlertChanges(competitor.id, competitor.name, lastData, scrapeData);
       }
       
       // Generate report
       await generateReport(competitor.id, scrapeId, scrapeData);
-      
-      saveDatabase();
       
       console.log(`✅ Completed ${competitor.name}`);
       
@@ -113,18 +112,14 @@ async function detectAndAlertChanges(
       console.log(`  New: ${newValue}`);
       
       // Get subscribed users for this competitor
-      const db = await getDatabase();
-      const subsResult = db.exec(`
-        SELECT email FROM competitor_subscriptions 
-        WHERE competitor_id = ?
-      `, [competitorId]);
+      const subs = await db.select()
+        .from(subscriptions)
+        .where(eq(subscriptions.competitorId, competitorId));
       
-      if (subsResult[0] && subsResult[0].values.length > 0) {
-        const emails = subsResult[0].values.map(row => row[0] as string);
-        
+      if (subs.length > 0) {
         // Send alerts to subscribed users
-        for (const email of emails) {
-          await sendChangeAlert(email, {
+        for (const sub of subs) {
+          await sendChangeAlert(sub.email, {
             competitorName,
             competitorUrl: newData.url as string || '',
             field,
@@ -134,7 +129,7 @@ async function detectAndAlertChanges(
           });
         }
         
-        console.log(`  📧 Alerted ${emails.length} subscribers`);
+        console.log(`  📧 Alerted ${subs.length} subscribers`);
       }
     }
   }

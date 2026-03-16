@@ -1,26 +1,50 @@
 import { v4 as uuidv4 } from 'uuid';
-import { getDatabase, saveDatabase } from '../db/index.js';
-import type { Report, ScrapeData } from '../models/index.js';
+import { getDb } from '../db/index.js';
+import { reports } from '../db/schema.js';
+
+const db = getDb();
+
+export interface ScrapeData {
+  price?: string | string[];
+  features?: string[];
+  name?: string | string[];
+  raw?: Record<string, unknown>;
+  url?: string | string[];
+  scrapedAt?: string;
+  [key: string]: unknown;
+}
+
+export interface Report {
+  id: string;
+  competitorId: string;
+  scrapeId: string;
+  htmlContent: string;
+  jsonData: ScrapeData;
+  isPublic: boolean;
+  createdAt: Date;
+}
 
 export async function generateReport(
   competitorId: string,
   scrapeId: string,
   data: ScrapeData
 ): Promise<Report> {
-  const db = await getDatabase();
   const id = uuidv4();
-  const now = new Date().toISOString();
+  const now = new Date();
   
   // Generate HTML report
   const htmlContent = generateHtmlReport(data);
   
   // Store report
-  db.run(`
-    INSERT INTO reports (id, competitor_id, scrape_id, html_content, json_data, is_public, created_at)
-    VALUES (?, ?, ?, ?, ?, ?, ?)
-  `, [id, competitorId, scrapeId, htmlContent, JSON.stringify(data), 0, now]);
-  
-  saveDatabase();
+  await db.insert(reports).values({
+    id,
+    competitorId,
+    scrapeId,
+    htmlContent,
+    jsonData: JSON.stringify(data),
+    isPublic: false,
+    createdAt: now,
+  });
   
   return {
     id,
@@ -29,7 +53,7 @@ export async function generateReport(
     htmlContent,
     jsonData: data,
     isPublic: false,
-    createdAt: new Date(now),
+    createdAt: now,
   };
 }
 

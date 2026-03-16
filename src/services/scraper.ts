@@ -18,7 +18,7 @@ export async function closeBrowser(): Promise<void> {
   }
 }
 
-interface CompetitorInfo {
+export interface ScraperInput {
   id: string;
   name: string;
   url: string;
@@ -30,7 +30,7 @@ interface CompetitorInfo {
   };
 }
 
-interface ScrapeResult {
+export interface ScrapeResult {
   price?: string;
   features?: string[];
   name?: string;
@@ -39,7 +39,7 @@ interface ScrapeResult {
   url: string;
 }
 
-export async function scrapeCompetitor(competitor: CompetitorInfo): Promise<ScrapeResult> {
+export async function scrapeCompetitor(competitor: ScraperInput): Promise<ScrapeResult> {
   const browserInstance = await getBrowser();
   const page = await browserInstance.newPage();
   

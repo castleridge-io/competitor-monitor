@@ -1,75 +1,67 @@
 import { Router } from 'express';
 import type { Router as RouterType } from 'express';
-import { getDatabase, saveDatabase } from '../db/index.js';
+import { getDb } from '../db/index.js';
+import { reports } from '../db/schema.js';
+import { eq, desc } from 'drizzle-orm';
 
 const router: RouterType = Router();
+const db = getDb();
 
 // Get report by ID
 router.get('/:id', async (req, res) => {
-  const db = await getDatabase();
-  const result = db.exec(`
-    SELECT id, competitor_id, scrape_id, html_content, json_data, is_public, created_at
-    FROM reports
-    WHERE id = ?
-  `, [req.params.id]);
+  const result = await db.select().from(reports).where(eq(reports.id, req.params.id));
   
-  if (!result[0] || result[0].values.length === 0) {
+  if (result.length === 0) {
     return res.status(404).json({ error: 'Report not found' });
   }
   
-  const row = result[0].values[0];
+  const report = result[0];
   res.json({
-    id: row[0],
-    competitorId: row[1],
-    scrapeId: row[2],
-    htmlContent: row[3],
-    jsonData: JSON.parse(row[4] as string),
-    isPublic: row[5] === 1,
-    createdAt: row[6],
+    id: report.id,
+    competitorId: report.competitorId,
+    scrapeId: report.scrapeId,
+    htmlContent: report.htmlContent,
+    jsonData: JSON.parse(report.jsonData),
+    isPublic: report.isPublic,
+    createdAt: report.createdAt,
   });
 });
 
 // List all reports
 router.get('/', async (_req, res) => {
-  const db = await getDatabase();
-  const result = db.exec(`
-    SELECT id, competitor_id, is_public, created_at
-    FROM reports
-    ORDER BY created_at DESC
-  `);
+  const result = await db.select({
+    id: reports.id,
+    competitorId: reports.competitorId,
+    isPublic: reports.isPublic,
+    createdAt: reports.createdAt,
+  }).from(reports).orderBy(desc(reports.createdAt));
   
-  const reports = result[0]?.values.map(row => ({
-    id: row[0],
-    competitorId: row[1],
-    isPublic: row[2] === 1,
-    createdAt: row[3],
-  })) || [];
-  
-  res.json(reports);
+  res.json(result);
 });
 
 // Make report public/private
 router.patch('/:id/public', async (req, res) => {
   const { isPublic } = req.body;
-  const db = await getDatabase();
   
-  db.run(`UPDATE reports SET is_public = ? WHERE id = ?`, [isPublic ? 1 : 0, req.params.id]);
-  saveDatabase();
+  await db.update(reports)
+    .set({ isPublic })
+    .where(eq(reports.id, req.params.id));
   
-  const result = db.exec('SELECT * FROM reports WHERE id = ?', [req.params.id]);
-  if (!result[0] || result[0].values.length === 0) {
+  const result = await db.select().from(reports).where(eq(reports.id, req.params.id));
+  
+  if (result.length === 0) {
     return res.status(404).json({ error: 'Report not found' });
   }
   
-  const row = result[0].values[0];
+  const report = result[0];
   res.json({
-    id: row[0],
-    competitorId: row[1],
-    scrapeId: row[2],
-    htmlContent: row[3],
-    jsonData: JSON.parse(row[4] as string),
-    isPublic: row[5] === 1,
-    createdAt: row[6],
+    id: report.id,
+    competitorId: report.competitorId,
+    scrapeId: report.scrapeId,
+    htmlContent: report.htmlContent,
+    jsonData: JSON.parse(report.jsonData),
+    isPublic: report.isPublic,
+    createdAt: report.createdAt,
   });
 });
 
