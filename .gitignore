@@ -6,20 +6,17 @@ node_modules/
 dist/
 *.tsbuildinfo
 
-# Environment
+# Environment (contains VPN credentials!)
 .env
-.env.local
-.env.*.local
+.env.*
+!.env.example
+!.env.production.example
 
 # Database
 *.db
 *.sqlite
 *.sqlite3
-
-# VPN (sensitive)
-vpn/protonvpn-auth.txt
-vpn/*.ovpn
-!vpn/*.example
+data/
 
 # Logs
 logs/
@@ -42,3 +39,8 @@ Thumbs.db
 # Playwright
 .playwright/
 playwright-report/
+
+# VPN (if using file-based config)
+vpn/protonvpn-auth.txt
+vpn/*.ovpn
+!vpn/*.example

@@ -3,16 +3,13 @@
 ## Quick Start
 
 ```bash
-# 1. Add VPN config
-cp ~/Downloads/protonvpn.ovpn vpn/protonvpn.ovpn
-cat > vpn/protonvpn-auth.txt << EOF
-YOUR_OPENVPN_USERNAME
-YOUR_OPENVPN_PASSWORD
-EOF
+# 1. Create .env.production from template
+cp .env.production.example .env.production
 
-# 2. Set environment
-cp .env.example .env
-# Edit .env with your values
+# 2. Edit .env.production and paste your VPN config:
+#    - OPENVPN_CONFIG (paste entire .ovpn content)
+#    - OPENVPN_USERNAME (from Proton VPN settings)
+#    - OPENVPN_PASSWORD (from Proton VPN settings)
 
 # 3. Build and run
 docker-compose up -d
@@ -21,20 +18,53 @@ docker-compose up -d
 docker-compose logs -f
 ```
 
-## How It Works
-
-- Docker container runs OpenVPN + Node.js app
-- Only scraper traffic goes through VPN
-- API accessible on port 3000 (no VPN)
-- VPN config mounted as read-only
-
 ## Environment Variables
 
-Create `.env` file:
+Create `.env.production` file with:
 
+### Required
 ```bash
 RESEND_API_KEY=re_xxx
 PUBLIC_URL=https://your-domain.com
+```
+
+### VPN (Optional)
+```bash
+# Option 1: Paste raw OpenVPN config
+OPENVPN_CONFIG="
+[paste entire .ovpn file content here]
+"
+
+# Option 2: Base64 encoded (easier)
+OPENVPN_CONFIG_BASE64=[base64 encoded .ovpn]
+
+# Credentials (from Proton VPN Settings > OpenVPN/IKEv2)
+OPENVPN_USERNAME=your_username
+OPENVPN_PASSWORD=your_password
+```
+
+## How to Get VPN Config
+
+1. Log in to [account.protonvpn.com](https://account.protonvpn.com)
+2. Go to **Downloads** → **OpenVPN configuration**
+3. Choose server (free: US, NL, JP)
+4. Download `.ovpn` file
+5. Open file, copy ALL content
+6. Paste into `OPENVPN_CONFIG` in `.env.production`
+7. Get credentials from **Settings** → **OpenVPN / IKEv2**
+
+## Deployment
+
+### With VPN
+```bash
+# .env.production has OPENVPN_* vars
+docker-compose up -d
+```
+
+### Without VPN
+```bash
+# .env.production has no OPENVPN_* vars
+docker-compose up -d
 ```
 
 ## Commands
@@ -49,73 +79,68 @@ docker-compose down
 # Logs
 docker-compose logs -f
 
-# Rebuild
+# Rebuild after code changes
 docker-compose up -d --build
 
-# Shell into container
+# Shell
 docker-compose exec app /bin/bash
 
-# Check VPN status
+# Check VPN IP
 docker-compose exec app curl https://api.ipify.org
 ```
 
-## VPN Configuration
+## Security
 
-Required files:
-- `vpn/protonvpn.ovpn` - OpenVPN config (from Proton VPN)
-- `vpn/protonvpn-auth.txt` - Credentials (2 lines: username, password)
-
-These are mounted read-only into container.
-
-## Without VPN
-
-If you don't want VPN:
-
-```bash
-# Remove VPN files
-rm vpn/protonvpn.ovpn vpn/protonvpn-auth.txt
-
-# Container will start without VPN
-docker-compose up -d
-```
+- ✅ VPN credentials in `.env.production` (not committed to git)
+- ✅ `.env*` in `.gitignore`
+- ✅ Auth file deleted after VPN starts
+- ✅ Config stored in temp (cleared on restart)
 
 ## Troubleshooting
 
 **VPN won't connect:**
 ```bash
-# Check VPN logs
 docker-compose exec app cat /var/log/openvpn.log
 ```
 
-**Container won't start:**
+**Invalid config:**
 ```bash
-# Check logs
-docker-compose logs app
-
-# Test manually
-docker-compose run --rm app /bin/bash
+# Test base64 encoding
+cat protonvpn.ovpn | base64 -w 0
 ```
 
-**Permission denied (NET_ADMIN):**
-- Ensure Docker has CAP_NET_ADMIN capability
-- On some systems, may need: `sudo setcap cap_net_admin=+ep /usr/sbin/openvpn`
+**Permission denied:**
+```bash
+# Ensure Docker has NET_ADMIN capability
+docker-compose down
+docker-compose up -d
+```
 
-## Production Deployment
+## Example .env.production
 
 ```bash
-# Build image
-docker build -t competitor-monitor .
+# App
+PORT=3000
+NODE_ENV=production
+DATABASE_PATH=/app/data/competitor-monitor.db
 
-# Run with VPN
-docker run -d \
-  --name competitor-monitor \
-  -p 3000:3000 \
-  --cap-add NET_ADMIN \
-  --device /dev/net/tun \
-  -v $(pwd)/vpn/protonvpn.ovpn:/vpn/protonvpn.ovpn:ro \
-  -v $(pwd)/vpn/protonvpn-auth.txt:/vpn/protonvpn-auth.txt:ro \
-  -v $(pwd)/data:/app/data \
-  -e RESEND_API_KEY=re_xxx \
-  -e PUBLIC_URL=https://your-domain.com \
-  competitor-monitor
+# Email
+RESEND_API_KEY=re_xxxxxxxxxxxx
+
+# Public URL
+PUBLIC_URL=https://competitors.yourdomain.com
+
+# VPN - Option 1 (base64, recommended)
+OPENVPN_CONFIG_BASE64=Y2xpZW50CmRldiB0dW4KcHJvdG8gdWRw...
+OPENVPN_USERNAME=abc123
+OPENVPN_PASSWORD=xyz789
+
+# VPN - Option 2 (raw config)
+# OPENVPN_CONFIG="
+# client
+# dev tun
+# proto udp
+# remote us-free-01.protonvpn.com 1194
+# ...
+# "
 ```
