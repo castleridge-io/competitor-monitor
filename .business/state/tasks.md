@@ -55,6 +55,25 @@
 ## Stats
 
 - Total: 5 tasks
+- Blocked: 1
+- In Progress: 2
+- Complete: 2
+ VPN + deployment.
+
+---
+
+## Backlog
+
+- Add Stripe billing
+- Create user dashboard
+- Add API rate limiting
+- Analytics integration
+
+---
+
+## Stats
+
+- Total: 5 tasks
 - Blocked: 2
 - Ready: 1
 - Complete: 2
