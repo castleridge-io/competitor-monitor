@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - DATABASE_PATH=/app/data/competitor-monitor.db
+      - RESEND_API_KEY=${RESEND_API_KEY}
+      - PUBLIC_URL=${PUBLIC_URL:-http://localhost:3000}
+    volumes:
+      # Persist database
+      - ./data:/app/data
+      # VPN config (read-only)
+      - ./vpn/protonvpn.ovpn:/vpn/protonvpn.ovpn:ro
+      - ./vpn/protonvpn-auth.txt:/vpn/protonvpn-auth.txt:ro
+    cap_add:
+      - NET_ADMIN  # Required for VPN
+    devices:
+      - /dev/net/tun  # Required for VPN
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
