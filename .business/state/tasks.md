@@ -1,6 +1,6 @@
 # Product F: Competitor Monitor - Tasks
 
-**Updated:** 2026-03-16
+**Updated:** 2026-03-17
 
 ---
 
@@ -41,39 +41,151 @@
 - **Blocked By:** TASK-F-001
 - **Estimate:** 2h
 
+### TASK-F-006: Competitor Research & Feature Roadmap
+- **Status:** ✅ Complete
+- **Priority:** P0
+- **Estimate:** 2h
+- **Started:** 2026-03-17 15:17 HKT
+- **Completed:** 2026-03-17 15:20 HKT
+- **Notes:** Full competitor research saved to ~/Vault/Projects/F-competitor-monitor/Competitor-Research-2026-03-17.md
+
 ---
 
-## Backlog
+## Feature Parity (Phase 1)
 
-- Add Stripe billing
-- Create user dashboard
-- Add API rate limiting
-- Analytics integration
+### TASK-F-007: Build User Dashboard UI
+- **Status:** 🔄 In Progress
+- **Priority:** P0
+- **Estimate:** 3-4 days
+- **Started:** 2026-03-17 15:35 HKT
+- **Session:** competitor-monitor-F007
+- **Branch:** feat/F007-dashboard-ui
+- **Notes:** React dashboard with competitor list, reports, alerts settings
+
+### TASK-F-008: Historical Trend Charts
+- **Status:** 🔲 Ready
+- **Priority:** P0
+- **Estimate:** 2-3 days
+- **Notes:** Price/feature history over time with visual charts
+
+### TASK-F-009: Telegram Bot Integration
+- **Status:** 🔄 In Progress
+- **Priority:** P1
+- **Estimate:** 1-2 days
+- **Started:** 2026-03-17 15:35 HKT
+- **Session:** competitor-monitor-F009
+- **Branch:** feat/F009-telegram-bot
+- **Notes:** Real-time alerts via Telegram bot
+
+### TASK-F-010: Public REST API
+- **Status:** 🔲 Ready
+- **Priority:** P1
+- **Estimate:** 2-3 days
+- **Notes:** API docs, authentication, rate limiting
+
+### TASK-F-011: Stripe Billing Integration
+- **Status:** 🔲 Ready
+- **Priority:** P1
+- **Estimate:** 2-3 days
+- **Notes:** Subscription tiers, checkout, webhook handling
+
+### TASK-F-012: API Rate Limiting
+- **Status:** 🔲 Ready
+- **Priority:** P2
+- **Estimate:** 1 day
+- **Notes:** Per-user limits, abuse prevention
+
+---
+
+## High Impact Novel Features (Phase 2)
+
+### TASK-F-013: AI Change Narratives
+- **Status:** 🔄 In Progress
+- **Priority:** P0
+- **Estimate:** 2-3 days
+- **Started:** 2026-03-17 15:35 HKT
+- **Session:** competitor-monitor-F013
+- **Branch:** feat/F013-ai-narratives
+- **Notes:** Auto-generate "What changed and why it matters" summaries using LLM
+
+### TASK-F-014: Feature Gap Analysis
+- **Status:** 🔲 Ready
+- **Priority:** P0
+- **Estimate:** 3-5 days
+- **Notes:** "What features does competitor X have that I don't?" comparison
+
+### TASK-F-015: Competitor Timeline Visualization
+- **Status:** 🔲 Ready
+- **Priority:** P1
+- **Estimate:** 2-3 days
+- **Notes:** Visual timeline of all changes with AI annotations
+
+### TASK-F-016: Battlecard Generator
+- **Status:** 🔲 Ready
+- **Priority:** P1
+- **Estimate:** 3-5 days
+- **Notes:** AI-generated battlecards from scraped competitor data
+
+### TASK-F-017: Embed Widgets
+- **Status:** 🔲 Ready
+- **Priority:** P1
+- **Estimate:** 2-3 days
+- **Notes:** "Powered by Competitor Monitor" embeddable widgets
+
+---
+
+## Differentiators (Phase 3)
+
+### TASK-F-018: One-Click Competitor Cloning
+- **Status:** 🔲 Ready
+- **Priority:** P2
+- **Estimate:** 5-7 days
+- **Notes:** Import competitor URL → auto-detect features → gap report
+
+### TASK-F-019: Market Position Maps
+- **Status:** 🔲 Ready
+- **Priority:** P2
+- **Estimate:** 3-4 days
+- **Notes:** Auto-generated 2x2 positioning charts
+
+### TASK-F-020: Weekly Digest Videos
+- **Status:** 🔲 Ready
+- **Priority:** P2
+- **Estimate:** 5-7 days
+- **Notes:** AI video summaries (HeyGen/Tavus integration)
+
+---
+
+## Moonshots (Future)
+
+### TASK-F-021: Multi-Source Intelligence
+- **Status:** 🔲 Backlog
+- **Priority:** P3
+- **Estimate:** 3-4 weeks
+- **Notes:** Social, ads, reviews, news in one place
+
+### TASK-F-022: Predictive Alerts
+- **Status:** 🔲 Backlog
+- **Priority:** P3
+- **Estimate:** 2-3 weeks
+- **Notes:** "Competitor likely to launch X based on hiring/keywords"
+
+### TASK-F-023: CRM Integrations
+- **Status:** 🔲 Backlog
+- **Priority:** P3
+- **Estimate:** 2-3 weeks
+- **Notes:** Salesforce, HubSpot integrations for win/loss tracking
 
 ---
 
 ## Stats
 
-- Total: 5 tasks
-- Blocked: 1
-- In Progress: 2
-- Complete: 2
- VPN + deployment.
+| Category | Count |
+|----------|-------|
+| Total | 23 tasks |
+| Complete | 2 |
+| In Progress | 1 |
+| Blocked | 2 |
+| Ready | 18 |
 
----
-
-## Backlog
-
-- Add Stripe billing
-- Create user dashboard
-- Add API rate limiting
-- Analytics integration
-
----
-
-## Stats
-
-- Total: 5 tasks
-- Blocked: 2
-- Ready: 1
-- Complete: 2
+**Updated:** 2026-03-17 15:28 HKT

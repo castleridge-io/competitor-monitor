@@ -86,6 +86,15 @@ export async function setupTestDatabase(): Promise<void> {
       UNIQUE(email, competitor_id)
     )
   `);
+
+  sqlite.run(`
+    CREATE TABLE IF NOT EXISTS change_narratives (
+      id TEXT PRIMARY KEY,
+      competitor_id TEXT NOT NULL,
+      narrative TEXT NOT NULL,
+      created_at INTEGER NOT NULL
+    )
+  `);
 }
 
 export function teardownTestDatabase(): void {
@@ -201,4 +210,20 @@ export async function createTestWaitlistEntry(email: string) {
   });
 
   return { id, email };
+}
+
+// Helper to create test narrative
+export async function createTestNarrative(competitorId: string, narrative: string, timestamp?: Date) {
+  const db = getTestDb();
+  const id = `narrative-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+  const createdAt = timestamp || new Date();
+
+  await db.insert(schema.changeNarratives).values({
+    id,
+    competitorId,
+    narrative,
+    createdAt,
+  });
+
+  return { id, competitorId, narrative };
 }
