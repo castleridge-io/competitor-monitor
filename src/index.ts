@@ -15,19 +15,21 @@ app.use(express.json());
 // Initialize database and start server
 async function start() {
   await initDatabase();
-  
+
   // Import routes AFTER database is initialized
   const { default: competitorsRouter } = await import('./routes/competitors.js');
   const { default: scrapeRouter } = await import('./routes/scrape.js');
   const { default: reportsRouter } = await import('./routes/reports.js');
   const { default: subscriptionsRouter } = await import('./routes/subscriptions.js');
   const { default: publicRouter } = await import('./routes/public.js');
-  
+  const { default: settingsRouter } = await import('./routes/settings.js');
+
   // Routes
   app.use('/api/competitors', competitorsRouter);
   app.use('/api/scrape', scrapeRouter);
   app.use('/api/reports', reportsRouter);
   app.use('/api/subscriptions', subscriptionsRouter);
+  app.use('/api/settings', settingsRouter);
   app.use('/public', publicRouter);
 
   // Health check

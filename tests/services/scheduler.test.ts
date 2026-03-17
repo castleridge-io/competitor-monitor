@@ -25,6 +25,10 @@ vi.mock('../../src/services/emailer.js', () => ({
   sendChangeAlert: vi.fn().mockResolvedValue({ success: true }),
 }));
 
+vi.mock('../../src/services/telegram.js', () => ({
+  sendTelegramAlert: vi.fn().mockResolvedValue({ success: true }),
+}));
+
 // Mock the db module
 vi.mock('../../src/db/index.js', () => ({
   getDb: () => dbRef.current,
@@ -40,6 +44,7 @@ describe('Scheduler Module', () => {
   let scrapeAllCompetitors: () => Promise<void>;
   let scrapeCompetitor: ReturnType<typeof vi.fn>;
   let sendChangeAlert: ReturnType<typeof vi.fn>;
+  let sendTelegramAlert: ReturnType<typeof vi.fn>;
   let cron: { default: { schedule: ReturnType<typeof vi.fn> } };
 
   beforeEach(async () => {
@@ -58,6 +63,9 @@ describe('Scheduler Module', () => {
 
     const emailerMod = await import('../../src/services/emailer.js');
     sendChangeAlert = vi.mocked(emailerMod.sendChangeAlert);
+
+    const telegramMod = await import('../../src/services/telegram.js');
+    sendTelegramAlert = vi.mocked(telegramMod.sendTelegramAlert);
 
     cron = await import('node-cron');
 
@@ -189,6 +197,34 @@ describe('Scheduler Module', () => {
       await scrapeAllCompetitors();
 
       expect(sendChangeAlert).not.toHaveBeenCalled();
+    });
+
+    it('should send Telegram alerts alongside email alerts', async () => {
+      const competitor = await createTestCompetitor({ id: 'comp-telegram' });
+
+      // Create a scrape in the past
+      const pastTime = new Date(Date.now() - 3600000);
+      await createTestScrape(competitor.id, { price: '$49/month' }, pastTime);
+      await createTestSubscription('user@example.com', competitor.id);
+
+      vi.mocked(scrapeCompetitor).mockResolvedValueOnce({
+        price: '$99/month',
+        features: ['Feature 1'],
+        url: 'https://example.com',
+        scrapedAt: new Date().toISOString(),
+        raw: {},
+      });
+
+      await scrapeAllCompetitors();
+
+      // Both email and telegram alerts should be sent
+      expect(sendChangeAlert).toHaveBeenCalled();
+      expect(sendTelegramAlert).toHaveBeenCalledWith(
+        expect.objectContaining({
+          competitorName: 'Test Competitor',
+          field: 'price',
+        })
+      );
     });
 
     it('should generate report after each scrape', async () => {

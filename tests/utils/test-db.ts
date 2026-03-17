@@ -86,6 +86,16 @@ export async function setupTestDatabase(): Promise<void> {
       UNIQUE(email, competitor_id)
     )
   `);
+
+  sqlite.run(`
+    CREATE TABLE IF NOT EXISTS telegram_settings (
+      id TEXT PRIMARY KEY,
+      chat_id TEXT,
+      enabled INTEGER NOT NULL DEFAULT 0,
+      created_at INTEGER NOT NULL,
+      updated_at INTEGER NOT NULL
+    )
+  `);
 }
 
 export function teardownTestDatabase(): void {
@@ -201,4 +211,29 @@ export async function createTestWaitlistEntry(email: string) {
   });
 
   return { id, email };
+}
+
+// Helper to create test telegram settings
+export async function createTestTelegramSettings(overrides: Partial<{
+  id: string;
+  chatId: string;
+  enabled: boolean;
+}> = {}) {
+  const db = getTestDb();
+  const id = overrides.id || 'telegram-settings-1';
+  const now = new Date();
+
+  await db.insert(schema.telegramSettings).values({
+    id,
+    chatId: overrides.chatId || null,
+    enabled: overrides.enabled ?? false,
+    createdAt: now,
+    updatedAt: now,
+  });
+
+  return {
+    id,
+    chatId: overrides.chatId || null,
+    enabled: overrides.enabled ?? false,
+  };
 }
