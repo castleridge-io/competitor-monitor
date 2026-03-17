@@ -91,9 +91,9 @@
 - **Priority:** P1
 - **Estimate:** 2-3 days
 - **Started:** 2026-03-17 20:49 HKT
-- **Completed:** 2026-03-17 21:06 HKT
-- **PR:** #9 (open)
-- **Notes:** Full Stripe integration with 3 tiers (Free/Pro/Enterprise), checkout, customer portal, webhook handling. 21 tests passing. Frontend: PricingPage, BillingPage, useBilling hook.
+- **Completed:** 2026-03-17 21:43 HKT
+- **Merged:** PR #10 (2026-03-17)
+- **Notes:** Full Stripe integration with 3 tiers (Free/Pro/Enterprise), checkout, customer portal, webhook handling. 21 tests passing. Frontend: PricingPage, BillingPage, useBilling hook. Rescued from closed PR #9, rebased and merged.
 
 ### TASK-F-012: API Rate Limiting
 - **Status:** 🔲 Ready
@@ -192,10 +192,10 @@
 | Category | Count |
 |----------|-------|
 | Total | 23 tasks |
-| Complete | 9 |
+| Complete | 10 |
 | In Progress | 0 |
 | Blocked | 2 |
-| Ready | 9 |
+| Ready | 8 |
 | Backlog | 3 |
 
-**Updated:** 2026-03-17 21:06 HKT
+**Updated:** 2026-03-17 21:44 HKT
