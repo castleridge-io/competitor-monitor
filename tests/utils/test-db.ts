@@ -115,6 +115,28 @@ export async function setupTestDatabase(): Promise<void> {
       created_at INTEGER NOT NULL
     )
   `);
+
+  sqlite.run(`
+    CREATE TABLE IF NOT EXISTS users (
+      id TEXT PRIMARY KEY,
+      email TEXT NOT NULL UNIQUE,
+      stripe_customer_id TEXT,
+      subscription_tier TEXT NOT NULL DEFAULT 'free',
+      created_at INTEGER NOT NULL
+    )
+  `);
+
+  sqlite.run(`
+    CREATE TABLE IF NOT EXISTS billing_subscriptions (
+      id TEXT PRIMARY KEY,
+      user_id TEXT NOT NULL,
+      stripe_subscription_id TEXT NOT NULL UNIQUE,
+      status TEXT NOT NULL,
+      current_period_end INTEGER NOT NULL,
+      created_at INTEGER NOT NULL,
+      updated_at INTEGER NOT NULL
+    )
+  `);
 }
 
 export function teardownTestDatabase(): void {
@@ -271,4 +293,62 @@ export async function createTestNarrative(competitorId: string, narrative: strin
   });
 
   return { id, competitorId, narrative };
+}
+
+// Helper to create test user
+export async function createTestUser(overrides: Partial<{
+  id: string;
+  email: string;
+  stripeCustomerId: string;
+  subscriptionTier: string;
+}> = {}) {
+  const db = getTestDb();
+  const id = overrides.id || `user-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+  const now = new Date();
+
+  await db.insert(schema.users).values({
+    id,
+    email: overrides.email || `test-${Date.now()}@example.com`,
+    stripeCustomerId: overrides.stripeCustomerId || null,
+    subscriptionTier: (overrides.subscriptionTier || 'free') as 'free' | 'pro' | 'enterprise',
+    createdAt: now,
+  });
+
+  return {
+    id,
+    email: overrides.email || `test-${Date.now()}@example.com`,
+    stripeCustomerId: overrides.stripeCustomerId || null,
+    subscriptionTier: overrides.subscriptionTier || 'free',
+  };
+}
+
+// Helper to create test billing subscription
+export async function createTestBillingSubscription(overrides: Partial<{
+  id: string;
+  userId: string;
+  stripeSubscriptionId: string;
+  status: string;
+  currentPeriodEnd: Date;
+}> = {}) {
+  const db = getTestDb();
+  const id = overrides.id || `billing-sub-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+  const now = new Date();
+
+  await db.insert(schema.billingSubscriptions).values({
+    id,
+    userId: overrides.userId || '',
+    stripeSubscriptionId: overrides.stripeSubscriptionId || `sub_${Date.now()}`,
+    status: overrides.status || 'active',
+    currentPeriodEnd: overrides.currentPeriodEnd || new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+    createdAt: now,
+    updatedAt: now,
+  });
+
+  return {
+    id,
+    userId: overrides.userId || '',
+    stripeSubscriptionId: overrides.stripeSubscriptionId || `sub_${Date.now()}`,
+    status: overrides.status || 'active',
+    currentPeriodEnd: overrides.currentPeriodEnd || new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+  };
 }

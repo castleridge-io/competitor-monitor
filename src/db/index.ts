@@ -127,6 +127,28 @@ export async function initDatabase(): Promise<void> {
       created_at INTEGER NOT NULL
     )
   `);
+
+  sqlite.run(`
+    CREATE TABLE IF NOT EXISTS users (
+      id TEXT PRIMARY KEY,
+      email TEXT NOT NULL UNIQUE,
+      stripe_customer_id TEXT,
+      subscription_tier TEXT NOT NULL DEFAULT 'free',
+      created_at INTEGER NOT NULL
+    )
+  `);
+
+  sqlite.run(`
+    CREATE TABLE IF NOT EXISTS billing_subscriptions (
+      id TEXT PRIMARY KEY,
+      user_id TEXT NOT NULL,
+      stripe_subscription_id TEXT NOT NULL UNIQUE,
+      status TEXT NOT NULL,
+      current_period_end INTEGER NOT NULL,
+      created_at INTEGER NOT NULL,
+      updated_at INTEGER NOT NULL
+    )
+  `);
   
   // Create indexes
   sqlite.run(`CREATE INDEX IF NOT EXISTS idx_scrapes_competitor ON scrapes(competitor_id)`);
@@ -137,6 +159,10 @@ export async function initDatabase(): Promise<void> {
   sqlite.run(`CREATE INDEX IF NOT EXISTS idx_narratives_date ON change_narratives(created_at)`);
   sqlite.run(`CREATE INDEX IF NOT EXISTS idx_feature_gaps_competitor ON feature_gaps(competitor_id)`);
   sqlite.run(`CREATE INDEX IF NOT EXISTS idx_feature_gaps_date ON feature_gaps(created_at)`);
+  sqlite.run(`CREATE INDEX IF NOT EXISTS idx_users_email ON users(email)`);
+  sqlite.run(`CREATE INDEX IF NOT EXISTS idx_users_stripe_customer ON users(stripe_customer_id)`);
+  sqlite.run(`CREATE INDEX IF NOT EXISTS idx_billing_subscriptions_user ON billing_subscriptions(user_id)`);
+  sqlite.run(`CREATE INDEX IF NOT EXISTS idx_billing_subscriptions_stripe ON billing_subscriptions(stripe_subscription_id)`);
   
   saveDatabase();
   console.log('✅ Database initialized');

@@ -85,6 +85,16 @@ export function Layout() {
                     Settings
                   </NavLink>
                 </li>
+                <li>
+                  <NavLink to="/dashboard/pricing" className={navLinkClass}>
+                    Pricing
+                  </NavLink>
+                </li>
+                <li>
+                  <NavLink to="/dashboard/billing" className={navLinkClass}>
+                    Billing
+                  </NavLink>
+                </li>
               </ul>
             </div>
           </nav>
