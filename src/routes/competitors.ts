@@ -4,6 +4,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { getDb } from '../db/index.js';
 import { competitors } from '../db/schema.js';
 import { eq } from 'drizzle-orm';
+import { isValidUrl, sanitizeString } from '../middleware/validation.js';
 
 const router: RouterType = Router();
 const db = getDb();
@@ -33,19 +34,25 @@ router.post('/', async (req, res) => {
     return res.status(400).json({ error: 'name and url are required' });
   }
   
+  // Validate URL format
+  if (!isValidUrl(competitorUrl)) {
+    return res.status(400).json({ error: 'Invalid URL format. Must be a valid http or https URL' });
+  }
+  
   const id = uuidv4();
   const now = new Date();
+  const sanitizedName = sanitizeString(name, 200);
   
   await db.insert(competitors).values({
     id,
-    name,
+    name: sanitizedName,
     url: competitorUrl,
     selectors: selectors ? JSON.stringify(selectors) : null,
     createdAt: now,
     updatedAt: now,
   });
   
-  res.status(201).json({ id, name, url: competitorUrl, selectors, createdAt: now, updatedAt: now });
+  res.status(201).json({ id, name: sanitizedName, url: competitorUrl, selectors, createdAt: now, updatedAt: now });
 });
 
 // Update competitor
@@ -55,8 +62,13 @@ router.patch('/:id', async (req, res) => {
   
   const updateData: Record<string, unknown> = { updatedAt: now };
   
-  if (name) updateData.name = name;
-  if (competitorUrl) updateData.url = competitorUrl;
+  if (name) updateData.name = sanitizeString(name, 200);
+  if (competitorUrl) {
+    if (!isValidUrl(competitorUrl)) {
+      return res.status(400).json({ error: 'Invalid URL format. Must be a valid http or https URL' });
+    }
+    updateData.url = competitorUrl;
+  }
   if (selectors) updateData.selectors = JSON.stringify(selectors);
   
   await db.update(competitors)
