@@ -54,13 +54,13 @@
 ## Feature Parity (Phase 1)
 
 ### TASK-F-007: Build User Dashboard UI
-- **Status:** 🔄 In Progress
+- **Status:** ✅ Complete
 - **Priority:** P0
 - **Estimate:** 3-4 days
 - **Started:** 2026-03-17 15:35 HKT
-- **Session:** competitor-monitor-F007
-- **Branch:** feat/F007-dashboard-ui
-- **Notes:** React dashboard with competitor list, reports, alerts settings
+- **Completed:** 2026-03-17 16:45 HKT
+- **Merged:** PR #3 (2026-03-17)
+- **Notes:** React dashboard with Vite + TypeScript + Tailwind. 89 tests passing. Includes Dashboard Overview, Competitors, Reports, Settings pages, auth hooks, price history charts.
 
 ### TASK-F-008: Historical Trend Charts
 - **Status:** 🔲 Ready
@@ -69,13 +69,10 @@
 - **Notes:** Price/feature history over time with visual charts
 
 ### TASK-F-009: Telegram Bot Integration
-- **Status:** 🔄 In Progress
+- **Status:** 🔲 Ready
 - **Priority:** P1
 - **Estimate:** 1-2 days
-- **Started:** 2026-03-17 15:35 HKT
-- **Session:** competitor-monitor-F009
-- **Branch:** feat/F009-telegram-bot
-- **Notes:** Real-time alerts via Telegram bot
+- **Notes:** Real-time alerts via Telegram bot. Previous PR #5 closed due to merge conflicts with F013. Needs clean recreation with both telegram_settings and change_narratives tables.
 
 ### TASK-F-010: Public REST API
 - **Status:** 🔲 Ready
@@ -100,13 +97,13 @@
 ## High Impact Novel Features (Phase 2)
 
 ### TASK-F-013: AI Change Narratives
-- **Status:** 🔄 In Progress
+- **Status:** ✅ Complete
 - **Priority:** P0
 - **Estimate:** 2-3 days
 - **Started:** 2026-03-17 15:35 HKT
-- **Session:** competitor-monitor-F013
-- **Branch:** feat/F013-ai-narratives
-- **Notes:** Auto-generate "What changed and why it matters" summaries using LLM
+- **Completed:** 2026-03-17 16:45 HKT
+- **Merged:** PR #4 (2026-03-17)
+- **Notes:** AI narrator service for generating change summaries. 110 tests passing. Database schema for narratives, LLM integration ready.
 
 ### TASK-F-014: Feature Gap Analysis
 - **Status:** 🔲 Ready
@@ -183,9 +180,10 @@
 | Category | Count |
 |----------|-------|
 | Total | 23 tasks |
-| Complete | 2 |
+| Complete | 5 |
 | In Progress | 1 |
 | Blocked | 2 |
-| Ready | 18 |
+| Ready | 12 |
+| Backlog | 3 |
 
-**Updated:** 2026-03-17 15:28 HKT
+**Updated:** 2026-03-17 16:45 HKT
