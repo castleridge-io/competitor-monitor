@@ -1,12 +1,12 @@
 {
   "product": "F. Competitor Monitor",
   "status": "building",
-  "cycleCount": 15,
-  "lastCycle": "2026-03-16T22:41:00+08:00",
+  "cycleCount": 18,
+  "lastCycle": "2026-03-17T10:50:00+08:00",
   "health": "green",
   "activeTask": "TASK-F-004",
-  "pendingApprovals": [],
+  "pendingApprovals": ["VPS Access", "VPN Credentials"],
   "enabled": true,
   "created": "2026-03-16T13:42:00+08:00",
-  "lastUpdate": "2026-03-16T21:32:00+08:00"
+  "lastUpdate": "2026-03-17T10:50:00+08:00"
 }
