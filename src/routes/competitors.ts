@@ -5,6 +5,7 @@ import { getDb } from '../db/index.js';
 import { competitors } from '../db/schema.js';
 import { eq } from 'drizzle-orm';
 import { isValidUrl, sanitizeString } from '../middleware/validation.js';
+import { getNarrativesForCompetitor } from '../services/narrator.js';
 
 const router: RouterType = Router();
 const db = getDb();
@@ -82,6 +83,23 @@ router.patch('/:id', async (req, res) => {
   }
   
   res.json(result[0]);
+});
+
+// Get narratives for a competitor
+router.get('/:id/narratives', async (req, res) => {
+  const { id } = req.params;
+  const limit = parseInt(req.query.limit as string) || 10;
+
+  // Verify competitor exists
+  const competitorResult = await db.select().from(competitors).where(eq(competitors.id, id));
+
+  if (competitorResult.length === 0) {
+    return res.status(404).json({ error: 'Competitor not found' });
+  }
+
+  const narratives = await getNarrativesForCompetitor(id, limit);
+
+  res.json(narratives);
 });
 
 // Delete competitor

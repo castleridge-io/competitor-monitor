@@ -11,7 +11,7 @@ vi.mock('../../src/db/index.js', () => ({
 }));
 
 // Import test utilities - must be after mock
-import { setupTestDatabase, teardownTestDatabase, getTestDb, createTestCompetitor } from '../utils/test-db.js';
+import { setupTestDatabase, teardownTestDatabase, getTestDb, createTestCompetitor, createTestNarrative } from '../utils/test-db.js';
 import * as schema from '../../src/db/schema.js';
 
 describe('Competitors Routes', () => {
@@ -167,6 +167,69 @@ describe('Competitors Routes', () => {
       const response = await request(app).delete('/api/competitors/nonexistent');
 
       expect(response.status).toBe(204);
+    });
+  });
+
+  describe('GET /api/competitors/:id/narratives', () => {
+    it('should return narratives for a competitor', async () => {
+      const competitor = await createTestCompetitor({ id: 'comp-1' });
+      await createTestNarrative(competitor.id, 'First narrative.');
+      await createTestNarrative(competitor.id, 'Second narrative.');
+
+      const response = await request(app).get('/api/competitors/comp-1/narratives');
+
+      expect(response.status).toBe(200);
+      expect(response.body.length).toBe(2);
+    });
+
+    it('should return empty array when no narratives exist', async () => {
+      await createTestCompetitor({ id: 'comp-2' });
+
+      const response = await request(app).get('/api/competitors/comp-2/narratives');
+
+      expect(response.status).toBe(200);
+      expect(response.body).toEqual([]);
+    });
+
+    it('should return 404 for non-existent competitor', async () => {
+      const response = await request(app).get('/api/competitors/nonexistent/narratives');
+
+      expect(response.status).toBe(404);
+      expect(response.body.error).toBe('Competitor not found');
+    });
+
+    it('should respect limit query parameter', async () => {
+      const competitor = await createTestCompetitor({ id: 'comp-3' });
+
+      // Create multiple narratives with explicit timestamps
+      const db = getTestDb();
+      for (let i = 0; i < 10; i++) {
+        await db.insert(schema.changeNarratives).values({
+          id: `narr-${i}`,
+          competitorId: competitor.id,
+          narrative: `Narrative ${i}.`,
+          createdAt: new Date(2024, 0, 1, i, 0, 0),
+        });
+      }
+
+      const response = await request(app).get('/api/competitors/comp-3/narratives?limit=5');
+
+      expect(response.status).toBe(200);
+      expect(response.body.length).toBe(5);
+    });
+
+    it('should return narratives with correct structure', async () => {
+      const competitor = await createTestCompetitor({ id: 'comp-4' });
+      await createTestNarrative(competitor.id, 'Test narrative content.');
+
+      const response = await request(app).get('/api/competitors/comp-4/narratives');
+
+      expect(response.status).toBe(200);
+      expect(response.body[0]).toHaveProperty('id');
+      expect(response.body[0]).toHaveProperty('competitorId');
+      expect(response.body[0]).toHaveProperty('narrative');
+      expect(response.body[0]).toHaveProperty('createdAt');
+      expect(response.body[0].narrative).toBe('Test narrative content.');
     });
   });
 });
