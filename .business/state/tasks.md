@@ -54,9 +54,12 @@
 ## Feature Parity (Phase 1)
 
 ### TASK-F-007: Build User Dashboard UI
-- **Status:** 🔲 Ready
+- **Status:** 🔄 In Progress
 - **Priority:** P0
 - **Estimate:** 3-4 days
+- **Started:** 2026-03-17 15:35 HKT
+- **Session:** competitor-monitor-F007
+- **Branch:** feat/F007-dashboard-ui
 - **Notes:** React dashboard with competitor list, reports, alerts settings
 
 ### TASK-F-008: Historical Trend Charts
@@ -66,9 +69,12 @@
 - **Notes:** Price/feature history over time with visual charts
 
 ### TASK-F-009: Telegram Bot Integration
-- **Status:** 🔲 Ready
+- **Status:** 🔄 In Progress
 - **Priority:** P1
 - **Estimate:** 1-2 days
+- **Started:** 2026-03-17 15:35 HKT
+- **Session:** competitor-monitor-F009
+- **Branch:** feat/F009-telegram-bot
 - **Notes:** Real-time alerts via Telegram bot
 
 ### TASK-F-010: Public REST API
@@ -94,9 +100,12 @@
 ## High Impact Novel Features (Phase 2)
 
 ### TASK-F-013: AI Change Narratives
-- **Status:** 🔲 Ready
+- **Status:** 🔄 In Progress
 - **Priority:** P0
 - **Estimate:** 2-3 days
+- **Started:** 2026-03-17 15:35 HKT
+- **Session:** competitor-monitor-F013
+- **Branch:** feat/F013-ai-narratives
 - **Notes:** Auto-generate "What changed and why it matters" summaries using LLM
 
 ### TASK-F-014: Feature Gap Analysis
