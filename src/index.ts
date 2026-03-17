@@ -32,6 +32,7 @@ async function start() {
   app.use('/api/subscriptions', subscriptionsRouter);
   app.use('/api/settings', settingsRouter);
   app.use('/api/trends', trendsRouter);
+  app.use('/api/gaps', gapsRouter);
   app.use('/public', publicRouter);
 
   // Health check
@@ -50,5 +51,8 @@ async function start() {
     console.log(`📊 Health: http://localhost:${PORT}/health`);
   });
 }
+
+start().catch(console.error);
+
 
 start().catch(console.error);

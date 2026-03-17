@@ -48,6 +48,14 @@ function AppRoutes() {
           }
         />
         <Route
+          path="gaps"
+          element={
+            <ProtectedRoute>
+              <GapsPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
           path="settings"
           element={
             <ProtectedRoute>

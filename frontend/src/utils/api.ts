@@ -189,4 +189,28 @@ export const apiClient = {
     })
     return handleResponse(response)
   },
+
+  // Feature Gaps
+  async analyzeFeatureGaps(data: NewFeatureGapAnalysis): Promise<FeatureGap> {
+    const response = await fetch(`${API_BASE}/gaps/analyze`, {
+      method: 'POST',
+      headers: getHeaders(),
+      body: JSON.stringify(data),
+    })
+    return handleResponse<FeatureGap>(response)
+  },
+
+  async getGapAnalysis(competitorId: string): Promise<FeatureGap> {
+    const response = await fetch(`${API_BASE}/gaps/${competitorId}`, {
+      headers: getHeaders(),
+    })
+    return handleResponse<FeatureGap>(response)
+  },
+
+  async getAllGapAnalyses(): Promise<FeatureGap[]> {
+    const response = await fetch(`${API_BASE}/gaps`, {
+      headers: getHeaders(),
+    })
+    return handleResponse<FeatureGap[]>(response)
+  },
 }

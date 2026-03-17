@@ -106,3 +106,18 @@ export interface PriceHistoryPoint {
   price: number
   competitorName: string
 }
+
+// Feature gap analysis types
+export interface FeatureGap {
+  id: string
+  competitorId: string
+  competitorName?: string
+  missingFeatures: string[]
+  recommendations: string
+  createdAt: Date
+}
+
+export interface NewFeatureGapAnalysis {
+  competitorId: string
+  userFeatures: string[]
+}
