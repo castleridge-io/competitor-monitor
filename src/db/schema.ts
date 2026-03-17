@@ -62,6 +62,15 @@ export const changeNarratives = sqliteTable('change_narratives', {
   createdAt: integer('created_at', { mode: 'timestamp' }).notNull(),
 });
 
+// Feature gaps table
+export const featureGaps = sqliteTable('feature_gaps', {
+  id: text('id').primaryKey(),
+  competitorId: text('competitor_id').notNull().references(() => competitors.id),
+  missingFeatures: text('missing_features').notNull(), // JSON string
+  recommendations: text('recommendations').notNull(),
+  createdAt: integer('created_at', { mode: 'timestamp' }).notNull(),
+});
+
 // Relations
 export const competitorsRelations = relations(competitors, ({ many }) => ({
   scrapes: many(scrapes),

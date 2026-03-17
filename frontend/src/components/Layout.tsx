@@ -76,6 +76,11 @@ export function Layout() {
                   </NavLink>
                 </li>
                 <li>
+                  <NavLink to="/dashboard/gaps" className={navLinkClass}>
+                    Feature Gaps
+                  </NavLink>
+                </li>
+                <li>
                   <NavLink to="/dashboard/settings" className={navLinkClass}>
                     Settings
                   </NavLink>

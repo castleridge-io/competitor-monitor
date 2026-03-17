@@ -63,16 +63,22 @@
 - **Notes:** React dashboard with Vite + TypeScript + Tailwind. 89 tests passing. Includes Dashboard Overview, Competitors, Reports, Settings pages, auth hooks, price history charts.
 
 ### TASK-F-008: Historical Trend Charts
-- **Status:** 🔲 Ready
+- **Status:** ✅ Complete
 - **Priority:** P0
 - **Estimate:** 2-3 days
-- **Notes:** Price/feature history over time with visual charts
+- **Started:** 2026-03-17 17:54 HKT
+- **Completed:** 2026-03-17 18:15 HKT
+- **Merged:** PR #7 (2026-03-17)
+- **Notes:** Price/feature history over time with visual charts using recharts. HistoricalPriceChart component with time range selector.
 
 ### TASK-F-009: Telegram Bot Integration
-- **Status:** 🔲 Ready
+- **Status:** ✅ Complete
 - **Priority:** P1
 - **Estimate:** 1-2 days
-- **Notes:** Real-time alerts via Telegram bot. Previous PR #5 closed due to merge conflicts with F013. Needs clean recreation with both telegram_settings and change_narratives tables.
+- **Started:** 2026-03-17 16:08 HKT
+- **Completed:** 2026-03-17 17:26 HKT
+- **Merged:** PR #6 (2026-03-17)
+- **Notes:** Successfully recreated with F013 conflicts resolved. Grammy bot with /start, /enable, /disable, /status commands. Integrated with scheduler for real-time alerts. 113+ tests passing.
 
 ### TASK-F-010: Public REST API
 - **Status:** 🔲 Ready
@@ -106,9 +112,11 @@
 - **Notes:** AI narrator service for generating change summaries. 110 tests passing. Database schema for narratives, LLM integration ready.
 
 ### TASK-F-014: Feature Gap Analysis
-- **Status:** 🔲 Ready
+- **Status:** 🔄 In Progress
 - **Priority:** P0
 - **Estimate:** 3-5 days
+- **Started:** 2026-03-17 18:20 HKT
+- **Agent:** Codex (session: fast-seaslug)
 - **Notes:** "What features does competitor X have that I don't?" comparison
 
 ### TASK-F-015: Competitor Timeline Visualization
@@ -180,10 +188,10 @@
 | Category | Count |
 |----------|-------|
 | Total | 23 tasks |
-| Complete | 5 |
-| In Progress | 1 |
+| Complete | 7 |
+| In Progress | 0 |
 | Blocked | 2 |
-| Ready | 12 |
+| Ready | 11 |
 | Backlog | 3 |
 
-**Updated:** 2026-03-17 16:45 HKT
+**Updated:** 2026-03-17 18:18 HKT

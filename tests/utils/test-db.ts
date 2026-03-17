@@ -105,6 +105,16 @@ export async function setupTestDatabase(): Promise<void> {
       created_at INTEGER NOT NULL
     )
   `);
+
+  sqlite.run(`
+    CREATE TABLE IF NOT EXISTS feature_gaps (
+      id TEXT PRIMARY KEY,
+      competitor_id TEXT NOT NULL,
+      missing_features TEXT NOT NULL,
+      recommendations TEXT NOT NULL,
+      created_at INTEGER NOT NULL
+    )
+  `);
 }
 
 export function teardownTestDatabase(): void {
