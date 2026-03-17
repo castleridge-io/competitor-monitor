@@ -7,6 +7,9 @@ import { CompetitorsPage } from './pages/CompetitorsPage'
 import { ReportsPage } from './pages/ReportsPage'
 import { SettingsPage } from './pages/SettingsPage'
 import { TrendsPage } from './pages/TrendsPage'
+import { GapsPage } from './pages/GapsPage'
+import { PricingPage } from './pages/PricingPage'
+import { BillingPage } from './pages/BillingPage'
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { isAuthenticated } = useAuthContext()
@@ -60,6 +63,22 @@ function AppRoutes() {
           element={
             <ProtectedRoute>
               <SettingsPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="pricing"
+          element={
+            <ProtectedRoute>
+              <PricingPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="billing"
+          element={
+            <ProtectedRoute>
+              <BillingPage />
             </ProtectedRoute>
           }
         />

@@ -71,6 +71,26 @@ export const featureGaps = sqliteTable('feature_gaps', {
   createdAt: integer('created_at', { mode: 'timestamp' }).notNull(),
 });
 
+// Users table for billing
+export const users = sqliteTable('users', {
+  id: text('id').primaryKey(),
+  email: text('email').notNull().unique(),
+  stripeCustomerId: text('stripe_customer_id'),
+  subscriptionTier: text('subscription_tier').notNull().default('free'), // 'free' | 'pro' | 'enterprise'
+  createdAt: integer('created_at', { mode: 'timestamp' }).notNull(),
+});
+
+// Billing subscriptions table
+export const billingSubscriptions = sqliteTable('billing_subscriptions', {
+  id: text('id').primaryKey(),
+  userId: text('user_id').notNull().references(() => users.id),
+  stripeSubscriptionId: text('stripe_subscription_id').notNull().unique(),
+  status: text('status').notNull(), // 'active' | 'canceled' | 'past_due' | 'unpaid'
+  currentPeriodEnd: integer('current_period_end', { mode: 'timestamp' }).notNull(),
+  createdAt: integer('created_at', { mode: 'timestamp' }).notNull(),
+  updatedAt: integer('updated_at', { mode: 'timestamp' }).notNull(),
+});
+
 // Relations
 export const competitorsRelations = relations(competitors, ({ many }) => ({
   scrapes: many(scrapes),
@@ -112,6 +132,20 @@ export const changeNarrativesRelations = relations(changeNarratives, ({ one }) =
   }),
 }));
 
+export const usersRelations = relations(users, ({ one }) => ({
+  subscription: one(billingSubscriptions, {
+    fields: [users.id],
+    references: [billingSubscriptions.userId],
+  }),
+}));
+
+export const billingSubscriptionsRelations = relations(billingSubscriptions, ({ one }) => ({
+  user: one(users, {
+    fields: [billingSubscriptions.userId],
+    references: [users.id],
+  }),
+}));
+
 // Type exports
 export type Competitor = typeof competitors.$inferSelect;
 export type NewCompetitor = typeof competitors.$inferInsert;
@@ -127,3 +161,7 @@ export type TelegramSettings = typeof telegramSettings.$inferSelect;
 export type NewTelegramSettings = typeof telegramSettings.$inferInsert;
 export type ChangeNarrative = typeof changeNarratives.$inferSelect;
 export type NewChangeNarrative = typeof changeNarratives.$inferInsert;
+export type User = typeof users.$inferSelect;
+export type NewUser = typeof users.$inferInsert;
+export type BillingSubscription = typeof billingSubscriptions.$inferSelect;
+export type NewBillingSubscription = typeof billingSubscriptions.$inferInsert;
