@@ -23,6 +23,7 @@ async function start() {
   const { default: subscriptionsRouter } = await import('./routes/subscriptions.js');
   const { default: publicRouter } = await import('./routes/public.js');
   const { default: settingsRouter } = await import('./routes/settings.js');
+  const { default: trendsRouter } = await import('./routes/trends.js');
 
   // Routes
   app.use('/api/competitors', competitorsRouter);
@@ -30,6 +31,7 @@ async function start() {
   app.use('/api/reports', reportsRouter);
   app.use('/api/subscriptions', subscriptionsRouter);
   app.use('/api/settings', settingsRouter);
+  app.use('/api/trends', trendsRouter);
   app.use('/public', publicRouter);
 
   // Health check
