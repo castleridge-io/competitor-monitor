@@ -4,6 +4,7 @@ import { competitors, scrapes, subscriptions } from '../db/schema.js';
 import { scrapeCompetitor, type ScraperInput } from './scraper.js';
 import { generateReport, type ScrapeData } from './reporter.js';
 import { sendChangeAlert } from './emailer.js';
+import { sendTelegramAlert } from './telegram.js';
 import { v4 as uuidv4 } from 'uuid';
 import { eq, desc } from 'drizzle-orm';
 
@@ -101,23 +102,25 @@ async function detectAndAlertChanges(
   newData: ScrapeData
 ): Promise<void> {
   const fieldsToCheck = ['price', 'features'] as const;
-  
+
   for (const field of fieldsToCheck) {
     const oldValue = JSON.stringify(oldData[field]);
     const newValue = JSON.stringify(newData[field]);
-    
+
     if (oldValue !== newValue) {
       console.log(`🔔 Change detected: ${competitorName} - ${field}`);
       console.log(`  Old: ${oldValue}`);
       console.log(`  New: ${newValue}`);
-      
+
+      const reportUrl = `${process.env.PUBLIC_URL || 'http://localhost:3000'}/public/reports/${competitorId}`;
+
       // Get subscribed users for this competitor
       const subs = await db.select()
         .from(subscriptions)
         .where(eq(subscriptions.competitorId, competitorId));
-      
+
       if (subs.length > 0) {
-        // Send alerts to subscribed users
+        // Send email alerts to subscribed users
         for (const sub of subs) {
           await sendChangeAlert(sub.email, {
             competitorName,
@@ -125,11 +128,29 @@ async function detectAndAlertChanges(
             field,
             oldValue: oldValue,
             newValue: newValue,
-            reportUrl: `${process.env.PUBLIC_URL || 'http://localhost:3000'}/public/reports/${competitorId}`,
+            reportUrl,
           });
         }
-        
-        console.log(`  📧 Alerted ${subs.length} subscribers`);
+
+        console.log(`  📧 Alerted ${subs.length} subscribers via email`);
+      }
+
+      // Send Telegram alert
+      const telegramResult = await sendTelegramAlert({
+        competitorName,
+        competitorUrl: newData.url as string || '',
+        field,
+        oldValue: oldValue,
+        newValue: newValue,
+        reportUrl,
+      });
+
+      if (telegramResult.success) {
+        console.log(`  📱 Sent Telegram alert`);
+      } else if (telegramResult.error !== 'Telegram not configured' &&
+                 telegramResult.error !== 'Telegram alerts are disabled' &&
+                 telegramResult.error !== 'No chat ID configured') {
+        console.error(`  ❌ Telegram alert failed: ${telegramResult.error}`);
       }
     }
   }

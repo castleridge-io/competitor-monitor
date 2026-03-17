@@ -45,6 +45,15 @@ export const subscriptions = sqliteTable('competitor_subscriptions', {
   createdAt: integer('created_at', { mode: 'timestamp' }).notNull(),
 });
 
+// Telegram settings table
+export const telegramSettings = sqliteTable('telegram_settings', {
+  id: text('id').primaryKey(),
+  chatId: text('chat_id'),
+  enabled: integer('enabled', { mode: 'boolean' }).notNull().default(false),
+  createdAt: integer('created_at', { mode: 'timestamp' }).notNull(),
+  updatedAt: integer('updated_at', { mode: 'timestamp' }).notNull(),
+});
+
 // Change narratives table
 export const changeNarratives = sqliteTable('change_narratives', {
   id: text('id').primaryKey(),
@@ -105,5 +114,7 @@ export type WaitlistEntry = typeof waitlist.$inferSelect;
 export type NewWaitlistEntry = typeof waitlist.$inferInsert;
 export type Subscription = typeof subscriptions.$inferSelect;
 export type NewSubscription = typeof subscriptions.$inferInsert;
+export type TelegramSettings = typeof telegramSettings.$inferSelect;
+export type NewTelegramSettings = typeof telegramSettings.$inferInsert;
 export type ChangeNarrative = typeof changeNarratives.$inferSelect;
 export type NewChangeNarrative = typeof changeNarratives.$inferInsert;
