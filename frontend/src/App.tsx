@@ -6,6 +6,7 @@ import { DashboardOverview } from './pages/DashboardOverview'
 import { CompetitorsPage } from './pages/CompetitorsPage'
 import { ReportsPage } from './pages/ReportsPage'
 import { SettingsPage } from './pages/SettingsPage'
+import { TrendsPage } from './pages/TrendsPage'
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { isAuthenticated } = useAuthContext()
@@ -35,6 +36,14 @@ function AppRoutes() {
           element={
             <ProtectedRoute>
               <ReportsPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="trends"
+          element={
+            <ProtectedRoute>
+              <TrendsPage />
             </ProtectedRoute>
           }
         />

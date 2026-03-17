@@ -88,20 +88,21 @@ export async function setupTestDatabase(): Promise<void> {
   `);
 
   sqlite.run(`
-<<<<<<< HEAD
     CREATE TABLE IF NOT EXISTS telegram_settings (
       id TEXT PRIMARY KEY,
       chat_id TEXT,
       enabled INTEGER NOT NULL DEFAULT 0,
       created_at INTEGER NOT NULL,
       updated_at INTEGER NOT NULL
-=======
+    )
+  `);
+
+  sqlite.run(`
     CREATE TABLE IF NOT EXISTS change_narratives (
       id TEXT PRIMARY KEY,
       competitor_id TEXT NOT NULL,
       narrative TEXT NOT NULL,
       created_at INTEGER NOT NULL
->>>>>>> origin/main
     )
   `);
 }
@@ -221,7 +222,6 @@ export async function createTestWaitlistEntry(email: string) {
   return { id, email };
 }
 
-<<<<<<< HEAD
 // Helper to create test telegram settings
 export async function createTestTelegramSettings(overrides: Partial<{
   id: string;
@@ -245,7 +245,8 @@ export async function createTestTelegramSettings(overrides: Partial<{
     chatId: overrides.chatId || null,
     enabled: overrides.enabled ?? false,
   };
-=======
+}
+
 // Helper to create test narrative
 export async function createTestNarrative(competitorId: string, narrative: string, timestamp?: Date) {
   const db = getTestDb();
@@ -260,5 +261,4 @@ export async function createTestNarrative(competitorId: string, narrative: strin
   });
 
   return { id, competitorId, narrative };
->>>>>>> origin/main
 }

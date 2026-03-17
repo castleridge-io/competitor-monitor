@@ -155,4 +155,38 @@ export const apiClient = {
     const response = await fetch('/health')
     return handleResponse(response)
   },
+
+  // Trends
+  async getHistoricalTrends(params?: {
+    competitorIds?: string
+    startDate?: string
+    endDate?: string
+    days?: number
+  }): Promise<Array<{
+    id: string
+    competitorId: string
+    competitorName: string
+    data: Record<string, unknown>
+    scrapedAt: Date
+  }>> {
+    const queryParts: string[] = []
+    if (params?.competitorIds) {
+      queryParts.push(`competitorIds=${encodeURIComponent(params.competitorIds)}`)
+    }
+    if (params?.startDate) {
+      queryParts.push(`startDate=${encodeURIComponent(params.startDate)}`)
+    }
+    if (params?.endDate) {
+      queryParts.push(`endDate=${encodeURIComponent(params.endDate)}`)
+    }
+    if (params?.days) {
+      queryParts.push(`days=${params.days}`)
+    }
+
+    const queryString = queryParts.length > 0 ? `?${queryParts.join('&')}` : ''
+    const response = await fetch(`${API_BASE}/trends/historical${queryString}`, {
+      headers: getHeaders(),
+    })
+    return handleResponse(response)
+  },
 }
