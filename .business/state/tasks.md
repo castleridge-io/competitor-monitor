@@ -87,10 +87,13 @@
 - **Notes:** API docs, authentication, rate limiting
 
 ### TASK-F-011: Stripe Billing Integration
-- **Status:** 🔲 Ready
+- **Status:** ✅ Complete
 - **Priority:** P1
 - **Estimate:** 2-3 days
-- **Notes:** Subscription tiers, checkout, webhook handling
+- **Started:** 2026-03-17 20:49 HKT
+- **Completed:** 2026-03-17 21:06 HKT
+- **PR:** #9 (open)
+- **Notes:** Full Stripe integration with 3 tiers (Free/Pro/Enterprise), checkout, customer portal, webhook handling. 21 tests passing. Frontend: PricingPage, BillingPage, useBilling hook.
 
 ### TASK-F-012: API Rate Limiting
 - **Status:** 🔲 Ready
@@ -189,10 +192,10 @@
 | Category | Count |
 |----------|-------|
 | Total | 23 tasks |
-| Complete | 8 |
+| Complete | 9 |
 | In Progress | 0 |
 | Blocked | 2 |
-| Ready | 10 |
+| Ready | 9 |
 | Backlog | 3 |
 
-**Updated:** 2026-03-17 20:21 HKT
+**Updated:** 2026-03-17 21:06 HKT
