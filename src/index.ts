@@ -24,6 +24,8 @@ async function start() {
   const { default: publicRouter } = await import('./routes/public.js');
   const { default: settingsRouter } = await import('./routes/settings.js');
   const { default: trendsRouter } = await import('./routes/trends.js');
+  const { default: gapsRouter } = await import('./routes/gaps.js');
+  const { default: billingRouter } = await import('./routes/billing.js');
 
   // Routes
   app.use('/api/competitors', competitorsRouter);
@@ -33,6 +35,7 @@ async function start() {
   app.use('/api/settings', settingsRouter);
   app.use('/api/trends', trendsRouter);
   app.use('/api/gaps', gapsRouter);
+  app.use('/api/billing', billingRouter);
   app.use('/public', publicRouter);
 
   // Health check
@@ -51,8 +54,5 @@ async function start() {
     console.log(`📊 Health: http://localhost:${PORT}/health`);
   });
 }
-
-start().catch(console.error);
-
 
 start().catch(console.error);
