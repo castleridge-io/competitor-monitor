@@ -54,11 +54,20 @@ export const telegramSettings = sqliteTable('telegram_settings', {
   updatedAt: integer('updated_at', { mode: 'timestamp' }).notNull(),
 });
 
+// Change narratives table
+export const changeNarratives = sqliteTable('change_narratives', {
+  id: text('id').primaryKey(),
+  competitorId: text('competitor_id').notNull().references(() => competitors.id),
+  narrative: text('narrative').notNull(),
+  createdAt: integer('created_at', { mode: 'timestamp' }).notNull(),
+});
+
 // Relations
 export const competitorsRelations = relations(competitors, ({ many }) => ({
   scrapes: many(scrapes),
   reports: many(reports),
   subscriptions: many(subscriptions),
+  narratives: many(changeNarratives),
 }));
 
 export const scrapesRelations = relations(scrapes, ({ one, many }) => ({
@@ -87,6 +96,13 @@ export const subscriptionsRelations = relations(subscriptions, ({ one }) => ({
   }),
 }));
 
+export const changeNarrativesRelations = relations(changeNarratives, ({ one }) => ({
+  competitor: one(competitors, {
+    fields: [changeNarratives.competitorId],
+    references: [competitors.id],
+  }),
+}));
+
 // Type exports
 export type Competitor = typeof competitors.$inferSelect;
 export type NewCompetitor = typeof competitors.$inferInsert;
@@ -100,3 +116,5 @@ export type Subscription = typeof subscriptions.$inferSelect;
 export type NewSubscription = typeof subscriptions.$inferInsert;
 export type TelegramSettings = typeof telegramSettings.$inferSelect;
 export type NewTelegramSettings = typeof telegramSettings.$inferInsert;
+export type ChangeNarrative = typeof changeNarratives.$inferSelect;
+export type NewChangeNarrative = typeof changeNarratives.$inferInsert;

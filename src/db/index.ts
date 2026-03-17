@@ -109,11 +109,22 @@ export async function initDatabase(): Promise<void> {
     )
   `);
 
+  sqlite.run(`
+    CREATE TABLE IF NOT EXISTS change_narratives (
+      id TEXT PRIMARY KEY,
+      competitor_id TEXT NOT NULL,
+      narrative TEXT NOT NULL,
+      created_at INTEGER NOT NULL
+    )
+  `);
+  
   // Create indexes
   sqlite.run(`CREATE INDEX IF NOT EXISTS idx_scrapes_competitor ON scrapes(competitor_id)`);
   sqlite.run(`CREATE INDEX IF NOT EXISTS idx_scrapes_date ON scrapes(scraped_at)`);
   sqlite.run(`CREATE INDEX IF NOT EXISTS idx_reports_public ON reports(is_public)`);
   sqlite.run(`CREATE INDEX IF NOT EXISTS idx_subscriptions_competitor ON competitor_subscriptions(competitor_id)`);
+  sqlite.run(`CREATE INDEX IF NOT EXISTS idx_narratives_competitor ON change_narratives(competitor_id)`);
+  sqlite.run(`CREATE INDEX IF NOT EXISTS idx_narratives_date ON change_narratives(created_at)`);
   
   saveDatabase();
   console.log('✅ Database initialized');
