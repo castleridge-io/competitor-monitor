@@ -121,3 +121,22 @@ export interface NewFeatureGapAnalysis {
   competitorId: string
   userFeatures: string[]
 }
+
+// Timeline types
+export interface TimelineEvent {
+  id: string
+  competitorId: string
+  competitorName: string
+  eventType: 'price_change' | 'feature_change' | 'initial_scrape' | 'data_update'
+  data: Record<string, unknown>
+  narrative: string
+  createdAt: Date
+}
+
+export interface TimelineResponse {
+  events: TimelineEvent[]
+  total: number
+  page: number
+  pageSize: number
+  totalPages: number
+}

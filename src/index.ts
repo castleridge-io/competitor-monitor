@@ -25,6 +25,7 @@ async function start() {
   const { default: settingsRouter } = await import('./routes/settings.js');
   const { default: trendsRouter } = await import('./routes/trends.js');
   const { default: gapsRouter } = await import('./routes/gaps.js');
+  const { default: timelineRouter } = await import('./routes/timeline.js');
   const { default: billingRouter } = await import('./routes/billing.js');
   const { default: apiKeysRouter } = await import('./routes/api-keys.js');
   const { default: publicApiRouter } = await import('./routes/public-api.js');

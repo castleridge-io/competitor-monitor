@@ -7,6 +7,8 @@ import type {
   Scrape,
   Subscription,
   NewSubscription,
+  TimelineResponse,
+  TimelineEvent,
 } from '../types'
 
 const API_BASE = '/api'
@@ -212,5 +214,48 @@ export const apiClient = {
       headers: getHeaders(),
     })
     return handleResponse<FeatureGap[]>(response)
+  },
+
+  // Timeline
+  async getTimeline(params?: {
+    competitorId?: string
+    startDate?: string
+    endDate?: string
+    eventType?: string
+    page?: number
+    pageSize?: number
+  }): Promise<TimelineResponse> {
+    const queryParts: string[] = []
+    if (params?.competitorId) {
+      queryParts.push(`competitorId=${encodeURIComponent(params.competitorId)}`)
+    }
+    if (params?.startDate) {
+      queryParts.push(`startDate=${encodeURIComponent(params.startDate)}`)
+    }
+    if (params?.endDate) {
+      queryParts.push(`endDate=${encodeURIComponent(params.endDate)}`)
+    }
+    if (params?.eventType) {
+      queryParts.push(`eventType=${encodeURIComponent(params.eventType)}`)
+    }
+    if (params?.page) {
+      queryParts.push(`page=${params.page}`)
+    }
+    if (params?.pageSize) {
+      queryParts.push(`pageSize=${params.pageSize}`)
+    }
+
+    const queryString = queryParts.length > 0 ? `?${queryParts.join('&')}` : ''
+    const response = await fetch(`${API_BASE}/timeline${queryString}`, {
+      headers: getHeaders(),
+    })
+    return handleResponse<TimelineResponse>(response)
+  },
+
+  async getTimelineEvent(id: string): Promise<TimelineEvent> {
+    const response = await fetch(`${API_BASE}/timeline/${id}`, {
+      headers: getHeaders(),
+    })
+    return handleResponse<TimelineEvent>(response)
   },
 }
