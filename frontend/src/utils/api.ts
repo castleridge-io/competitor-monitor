@@ -9,6 +9,9 @@ import type {
   NewSubscription,
   TimelineResponse,
   TimelineEvent,
+  MarketPosition,
+  FeatureGap,
+  NewFeatureGapAnalysis,
 } from '../types'
 
 const API_BASE = '/api'
@@ -257,5 +260,13 @@ export const apiClient = {
       headers: getHeaders(),
     })
     return handleResponse<TimelineEvent>(response)
+  },
+
+  // Market Position
+  async getMarketPositions(): Promise<MarketPosition[]> {
+    const response = await fetch(`${API_BASE}/market-position`, {
+      headers: getHeaders(),
+    })
+    return handleResponse<MarketPosition[]>(response)
   },
 }
