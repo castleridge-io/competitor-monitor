@@ -99,10 +99,12 @@
 - **Notes:** Full Stripe integration with 3 tiers (Free/Pro/Enterprise), checkout, customer portal, webhook handling. 21 tests passing. Frontend: PricingPage, BillingPage, useBilling hook. Rescued from closed PR #9, rebased and merged.
 
 ### TASK-F-012: API Rate Limiting
-- **Status:** 🔲 Ready
+- **Status:** 🔄 In Progress
 - **Priority:** P2
 - **Estimate:** 1 day
-- **Notes:** Per-user limits, abuse prevention
+- **Started:** 2026-03-18 09:18 HKT
+- **PR:** #12 (pending merge)
+- **Notes:** Applied rate limiter to all public API routes. Middleware existed but wasn't applied. Critical security fix.
 
 ---
 
