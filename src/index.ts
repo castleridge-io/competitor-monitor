@@ -30,6 +30,7 @@ async function start() {
   const { default: apiKeysRouter } = await import('./routes/api-keys.js');
   const { default: publicApiRouter } = await import('./routes/public-api.js');
   const { default: docsRouter } = await import('./routes/api-docs.js');
+  const { default: widgetsRouter } = await import('./routes/widgets.js');
   const { authenticateApiKey } = await import('./middleware/auth.js');
   const { rateLimiter } = await import('./middleware/rate-limiter.js');
 
@@ -43,6 +44,7 @@ async function start() {
   app.use('/api/gaps', gapsRouter);
   app.use('/api/billing', billingRouter);
   app.use('/public', publicRouter);
+  app.use('/api/v1/widgets', widgetsRouter);
 
   // Health check
   app.get('/health', (_req, res) => {

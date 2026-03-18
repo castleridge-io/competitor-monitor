@@ -149,6 +149,22 @@ export async function setupTestDatabase(): Promise<void> {
       revoked_at INTEGER
     )
   `);
+
+  sqlite.run(`
+    CREATE TABLE IF NOT EXISTS battlecards (
+      id TEXT PRIMARY KEY,
+      competitor_id TEXT NOT NULL,
+      title TEXT NOT NULL,
+      summary TEXT NOT NULL,
+      strengths TEXT NOT NULL,
+      weaknesses TEXT NOT NULL,
+      pricing TEXT NOT NULL,
+      features TEXT NOT NULL,
+      win_strategies TEXT NOT NULL,
+      created_at INTEGER NOT NULL,
+      updated_at INTEGER NOT NULL
+    )
+  `);
 }
 
 export function teardownTestDatabase(): void {
