@@ -180,7 +180,7 @@ export async function getCardData(competitorId: string): Promise<CardData | null
     orderBy: [desc(schema.scrapes.scrapedAt)],
   });
 
-  let features = [];
+  let features: Array<{ feature: string; competitor: boolean; ours: boolean }> = [];
   let price = '';
   if (latestScrape) {
     const scrapeData = typeof latestScrape.data === 'string' ? JSON.parse(latestScrape.data) : latestScrape.data;
@@ -197,7 +197,7 @@ export async function getCardData(competitorId: string): Promise<CardData | null
     competitorId: competitor.id,
     competitorName: competitor.name,
     title: `Battlecard: ${competitor.name}`,
-    summary: competitor.description || '',
+    summary: '',
     strengths: [],
     weaknesses: [],
     pricing: {

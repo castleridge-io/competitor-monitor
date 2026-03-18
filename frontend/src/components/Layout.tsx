@@ -95,6 +95,11 @@ export function Layout() {
                     Billing
                   </NavLink>
                 </li>
+                <li>
+                  <NavLink to="/dashboard/embed" className={navLinkClass}>
+                    Embed Widgets
+                  </NavLink>
+                </li>
               </ul>
             </div>
           </nav>

@@ -10,6 +10,8 @@ import { TrendsPage } from './pages/TrendsPage'
 import { GapsPage } from './pages/GapsPage'
 import { PricingPage } from './pages/PricingPage'
 import { BillingPage } from './pages/BillingPage'
+import { EmbedPage } from './pages/EmbedPage'
+import { TimelinePage } from './pages/TimelinePage'
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { isAuthenticated } = useAuthContext()
@@ -87,6 +89,14 @@ function AppRoutes() {
           element={
             <ProtectedRoute>
               <BillingPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="embed"
+          element={
+            <ProtectedRoute>
+              <EmbedPage />
             </ProtectedRoute>
           }
         />

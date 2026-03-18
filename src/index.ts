@@ -31,6 +31,7 @@ async function start() {
   const { default: publicApiRouter } = await import('./routes/public-api.js');
   const { default: docsRouter } = await import('./routes/api-docs.js');
   const { default: widgetsRouter } = await import('./routes/widgets.js');
+  const { default: embedRouter } = await import('./routes/embed.js');
   const { authenticateApiKey } = await import('./middleware/auth.js');
   const { rateLimiter } = await import('./middleware/rate-limiter.js');
 
@@ -45,6 +46,7 @@ async function start() {
   app.use('/api/billing', billingRouter);
   app.use('/public', publicRouter);
   app.use('/api/v1/widgets', widgetsRouter);
+  app.use('/api/v1/embed', embedRouter);
 
   // Health check
   app.get('/health', (_req, res) => {
