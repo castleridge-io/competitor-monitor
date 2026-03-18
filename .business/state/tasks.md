@@ -99,11 +99,12 @@
 - **Notes:** Full Stripe integration with 3 tiers (Free/Pro/Enterprise), checkout, customer portal, webhook handling. 21 tests passing. Frontend: PricingPage, BillingPage, useBilling hook. Rescued from closed PR #9, rebased and merged.
 
 ### TASK-F-012: API Rate Limiting
-- **Status:** 🔄 In Progress
+- **Status:** ✅ Complete
 - **Priority:** P2
 - **Estimate:** 1 day
 - **Started:** 2026-03-18 09:18 HKT
-- **PR:** #12 (pending merge)
+- **Completed:** 2026-03-18 09:45 HKT
+- **Merged:** PR #12 (2026-03-18)
 - **Notes:** Applied rate limiter to all public API routes. Middleware existed but wasn't applied. Critical security fix.
 
 ---
@@ -129,10 +130,11 @@
 - **Notes:** "What features does competitor X have that I don't?" comparison. Frontend GapsPage, backend routes/gaps.ts, feature-gap-analyzer service. 512+ tests passing.
 
 ### TASK-F-015: Competitor Timeline Visualization
-- **Status:** 🔲 Ready
+- **Status:** 🔄 In Progress
 - **Priority:** P1
 - **Estimate:** 2-3 days
-- **Notes:** Visual timeline of all changes with AI annotations
+- **Started:** 2026-03-18 09:45 HKT
+- **Notes:** Visual timeline of all changes with AI annotations. Backend route + frontend TimelinePage component.
 
 ### TASK-F-016: Battlecard Generator
 - **Status:** 🔲 Ready
@@ -197,10 +199,10 @@
 | Category | Count |
 |----------|-------|
 | Total | 23 tasks |
-| Complete | 11 |
+| Complete | 12 |
 | In Progress | 0 |
 | Blocked | 2 |
 | Ready | 7 |
 | Backlog | 3 |
 
-**Updated:** 2026-03-18 08:53 HKT
+**Updated:** 2026-03-18 09:45 HKT
