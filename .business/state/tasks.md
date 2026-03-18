@@ -130,11 +130,13 @@
 - **Notes:** "What features does competitor X have that I don't?" comparison. Frontend GapsPage, backend routes/gaps.ts, feature-gap-analyzer service. 512+ tests passing.
 
 ### TASK-F-015: Competitor Timeline Visualization
-- **Status:** 🔄 In Progress
+- **Status:** ✅ Complete
 - **Priority:** P1
 - **Estimate:** 2-3 days
 - **Started:** 2026-03-18 09:45 HKT
-- **Notes:** Visual timeline of all changes with AI annotations. Backend route + frontend TimelinePage component.
+- **Completed:** 2026-03-18 10:42 HKT
+- **PR:** #13 (pending review)
+- **Notes:** Visual timeline of all changes with AI annotations. Backend route + frontend TimelinePage component. 534+ new tests.
 
 ### TASK-F-016: Battlecard Generator
 - **Status:** 🔲 Ready
@@ -199,7 +201,7 @@
 | Category | Count |
 |----------|-------|
 | Total | 23 tasks |
-| Complete | 12 |
+| Complete | 13 |
 | In Progress | 0 |
 | Blocked | 2 |
 | Ready | 7 |
