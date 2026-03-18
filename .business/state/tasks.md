@@ -135,14 +135,16 @@
 - **Estimate:** 2-3 days
 - **Started:** 2026-03-18 09:45 HKT
 - **Completed:** 2026-03-18 10:42 HKT
-- **PR:** #13 (pending review)
+- **Merged:** PR #13 (2026-03-18)
 - **Notes:** Visual timeline of all changes with AI annotations. Backend route + frontend TimelinePage component. 534+ new tests.
 
 ### TASK-F-016: Battlecard Generator
-- **Status:** 🔲 Ready
+- **Status:** 🔄 In Progress
 - **Priority:** P1
 - **Estimate:** 3-5 days
-- **Notes:** AI-generated battlecards from scraped competitor data
+- **Started:** 2026-03-18 11:57 HKT
+- **PR:** #15 (pending review)
+- **Notes:** AI-generated battlecards from scraped competitor data. Database schema, backend API, service, frontend page, 100+ tests.
 
 ### TASK-F-017: Embed Widgets
 - **Status:** 🔲 Ready
@@ -201,10 +203,10 @@
 | Category | Count |
 |----------|-------|
 | Total | 23 tasks |
-| Complete | 13 |
-| In Progress | 0 |
+| Complete | 14 |
+| In Progress | 1 |
 | Blocked | 2 |
-| Ready | 7 |
+| Ready | 6 |
 | Backlog | 3 |
 
-**Updated:** 2026-03-18 09:45 HKT
+**Updated:** 2026-03-18 11:57 HKT
