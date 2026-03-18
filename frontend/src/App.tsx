@@ -12,6 +12,7 @@ import { PricingPage } from './pages/PricingPage'
 import { BillingPage } from './pages/BillingPage'
 import { EmbedPage } from './pages/EmbedPage'
 import { TimelinePage } from './pages/TimelinePage'
+import { ClonePage } from './pages/ClonePage'
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { isAuthenticated } = useAuthContext()
@@ -97,6 +98,14 @@ function AppRoutes() {
           element={
             <ProtectedRoute>
               <EmbedPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="clone"
+          element={
+            <ProtectedRoute>
+              <ClonePage />
             </ProtectedRoute>
           }
         />
