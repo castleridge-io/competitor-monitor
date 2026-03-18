@@ -165,6 +165,38 @@ export async function setupTestDatabase(): Promise<void> {
       updated_at INTEGER NOT NULL
     )
   `);
+
+  sqlite.run(`
+    CREATE TABLE IF NOT EXISTS videos (
+      id TEXT PRIMARY KEY,
+      user_id TEXT NOT NULL,
+      title TEXT NOT NULL,
+      script TEXT NOT NULL,
+      video_url TEXT,
+      thumbnail_url TEXT,
+      duration INTEGER,
+      status TEXT NOT NULL DEFAULT 'pending',
+      error TEXT,
+      provider TEXT NOT NULL DEFAULT 'heygen',
+      provider_video_id TEXT,
+      metadata TEXT,
+      created_at INTEGER NOT NULL,
+      completed_at INTEGER
+    )
+  `);
+
+  sqlite.run(`
+    CREATE TABLE IF NOT EXISTS video_segments (
+      id TEXT PRIMARY KEY,
+      video_id TEXT NOT NULL,
+      competitor_id TEXT NOT NULL,
+      "order" INTEGER NOT NULL,
+      script TEXT NOT NULL,
+      start_time INTEGER,
+      end_time INTEGER,
+      created_at INTEGER NOT NULL
+    )
+  `);
 }
 
 export function teardownTestDatabase(): void {
@@ -411,5 +443,95 @@ export async function createTestApiKey(overrides: Partial<{
     name: overrides.name || 'Test API Key',
     lastUsedAt: overrides.lastUsedAt !== undefined ? overrides.lastUsedAt : null,
     revokedAt: overrides.revokedAt !== undefined ? overrides.revokedAt : null,
+  };
+}
+
+// Helper to create test video
+export async function createTestVideo(overrides: Partial<{
+  id: string;
+  userId: string;
+  title: string;
+  script: string;
+  videoUrl: string;
+  thumbnailUrl: string;
+  duration: number;
+  status: string;
+  error: string;
+  provider: string;
+  providerVideoId: string;
+  metadata: Record<string, unknown>;
+  completedAt: Date | null;
+}> = {}) {
+  const db = getTestDb();
+  const id = overrides.id || `video-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+  const now = new Date();
+
+  await db.insert(schema.videos).values({
+    id,
+    userId: overrides.userId || '',
+    title: overrides.title || 'Test Video',
+    script: overrides.script || 'This is a test video script.',
+    videoUrl: overrides.videoUrl || null,
+    thumbnailUrl: overrides.thumbnailUrl || null,
+    duration: overrides.duration || null,
+    status: (overrides.status || 'pending') as 'pending' | 'processing' | 'completed' | 'failed',
+    error: overrides.error || null,
+    provider: (overrides.provider || 'heygen') as 'heygen' | 'tavus',
+    providerVideoId: overrides.providerVideoId || null,
+    metadata: overrides.metadata ? JSON.stringify(overrides.metadata) : null,
+    createdAt: now,
+    completedAt: overrides.completedAt !== undefined ? overrides.completedAt : null,
+  });
+
+  return {
+    id,
+    userId: overrides.userId || '',
+    title: overrides.title || 'Test Video',
+    script: overrides.script || 'This is a test video script.',
+    videoUrl: overrides.videoUrl || null,
+    thumbnailUrl: overrides.thumbnailUrl || null,
+    duration: overrides.duration || null,
+    status: overrides.status || 'pending',
+    error: overrides.error || null,
+    provider: overrides.provider || 'heygen',
+    providerVideoId: overrides.providerVideoId || null,
+    metadata: overrides.metadata || null,
+    completedAt: overrides.completedAt !== undefined ? overrides.completedAt : null,
+  };
+}
+
+// Helper to create test video segment
+export async function createTestVideoSegment(overrides: Partial<{
+  id: string;
+  videoId: string;
+  competitorId: string;
+  order: number;
+  script: string;
+  startTime: number;
+  endTime: number;
+}> = {}) {
+  const db = getTestDb();
+  const id = overrides.id || `segment-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+  const now = new Date();
+
+  await db.insert(schema.videoSegments).values({
+    id,
+    videoId: overrides.videoId || '',
+    competitorId: overrides.competitorId || '',
+    order: overrides.order || 0,
+    script: overrides.script || 'Test segment script.',
+    startTime: overrides.startTime !== undefined ? overrides.startTime : null,
+    endTime: overrides.endTime !== undefined ? overrides.endTime : null,
+    createdAt: now,
+  });
+
+  return {
+    id,
+    videoId: overrides.videoId || '',
+    competitorId: overrides.competitorId || '',
+    order: overrides.order || 0,
+    script: overrides.script || 'Test segment script.',
+    startTime: overrides.startTime !== undefined ? overrides.startTime : null,
+    endTime: overrides.endTime !== undefined ? overrides.endTime : null,
   };
 }

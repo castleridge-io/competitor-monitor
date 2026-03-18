@@ -71,6 +71,11 @@ export function Layout() {
                   </NavLink>
                 </li>
                 <li>
+                  <NavLink to="/dashboard/videos" className={navLinkClass}>
+                    Videos
+                  </NavLink>
+                </li>
+                <li>
                   <NavLink to="/dashboard/trends" className={navLinkClass}>
                     Trends
                   </NavLink>

@@ -1,10 +1,11 @@
 import cron from 'node-cron';
 import { getDb } from '../db/index.js';
-import { competitors, scrapes, subscriptions } from '../db/schema.js';
+import { competitors, scrapes, subscriptions, users, changeNarratives, videos } from '../db/schema.js';
 import { scrapeCompetitor, type ScraperInput } from './scraper.js';
 import { generateReport, type ScrapeData } from './reporter.js';
 import { sendChangeAlert } from './emailer.js';
 import { sendTelegramAlert } from './telegram.js';
+import { generateVideoScript, generateVideo } from './video-generator.js';
 import { v4 as uuidv4 } from 'uuid';
 import { eq, desc } from 'drizzle-orm';
 
@@ -19,9 +20,18 @@ export function startScheduler(): void {
   }, {
     timezone: 'Asia/Hong_Kong',
   });
-  
+
+  // Weekly video digest on Monday at 8 AM HKT (00:00 UTC Monday)
+  const weeklyVideoJob = cron.schedule('0 0 * * 1', async () => {
+    console.log('🎬 Generating weekly video digest...');
+    await generateWeeklyDigestVideos();
+  }, {
+    timezone: 'Asia/Hong_Kong',
+  });
+
   scheduledJobs.set('daily', dailyJob);
-  console.log('✅ Scheduler started (daily at 6 AM HKT)');
+  scheduledJobs.set('weekly-video', weeklyVideoJob);
+  console.log('✅ Scheduler started (daily at 6 AM HKT, weekly video on Monday at 8 AM HKT)');
 }
 
 export function stopScheduler(): void {
@@ -154,4 +164,93 @@ async function detectAndAlertChanges(
       }
     }
   }
+}
+
+/**
+ * Generate weekly digest videos for users with video feature enabled.
+ * This is called automatically by the scheduler every Monday.
+ */
+export async function generateWeeklyDigestVideos(): Promise<void> {
+  // Check if video generation is enabled
+  if (!process.env.HEYGEN_API_KEY && !process.env.TAVUS_API_KEY) {
+    console.log('📹 Video generation disabled (no API key configured)');
+    return;
+  }
+
+  // Get all users (in a real app, you'd filter by users with video feature enabled)
+  const allUsers = await db.select().from(users);
+
+  if (allUsers.length === 0) {
+    console.log('📹 No users found for video generation');
+    return;
+  }
+
+  console.log(`📹 Generating digest videos for ${allUsers.length} users...`);
+
+  for (const user of allUsers) {
+    try {
+      // Get recent narratives for the user
+      const narratives = await db
+        .select()
+        .from(changeNarratives)
+        .orderBy(desc(changeNarratives.createdAt))
+        .limit(20);
+
+      if (narratives.length === 0) {
+        console.log(`  ⏭️  No narratives for user ${user.email}, skipping`);
+        continue;
+      }
+
+      // Generate script
+      const script = await generateVideoScript(
+        narratives.map(n => ({
+          id: n.id,
+          competitorId: n.competitorId,
+          narrative: n.narrative,
+          createdAt: n.createdAt,
+        }))
+      );
+
+      // Determine provider (prefer HeyGen, fallback to Tavus)
+      const provider = process.env.HEYGEN_API_KEY ? 'heygen' : 'tavus';
+
+      // Generate video
+      console.log(`  🎬 Generating video for ${user.email}...`);
+      const videoResult = await generateVideo({
+        script,
+        title: `Weekly Competitor Digest - ${new Date().toLocaleDateString()}`,
+        provider,
+      });
+
+      // Save video to database
+      const videoId = uuidv4();
+      const now = new Date();
+
+      await db.insert(videos).values({
+        id: videoId,
+        userId: user.id,
+        title: `Weekly Competitor Digest - ${now.toLocaleDateString()}`,
+        script,
+        videoUrl: null,
+        thumbnailUrl: null,
+        duration: null,
+        status: 'processing',
+        error: null,
+        provider,
+        providerVideoId: videoResult.providerVideoId,
+        metadata: null,
+        createdAt: now,
+        completedAt: null,
+      });
+
+      console.log(`  ✅ Video generation started for ${user.email} (ID: ${videoId})`);
+
+      // Rate limit between video generations
+      await new Promise(resolve => setTimeout(resolve, 5000));
+    } catch (error) {
+      console.error(`  ❌ Failed to generate video for ${user.email}:`, error);
+    }
+  }
+
+  console.log('🏁 Weekly video digest complete');
 }

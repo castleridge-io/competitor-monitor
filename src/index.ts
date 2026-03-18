@@ -34,6 +34,7 @@ async function start() {
   const { default: embedRouter } = await import('./routes/embed.js');
   const { default: cloneRouter } = await import('./routes/clone.js');
   const { default: marketPositionRouter } = await import('./routes/market-position.js');
+  const { default: videosRouter } = await import('./routes/videos.js');
   const { authenticateApiKey } = await import('./middleware/auth.js');
   const { rateLimiter } = await import('./middleware/rate-limiter.js');
 
@@ -48,6 +49,7 @@ async function start() {
   app.use('/api/billing', billingRouter);
   app.use('/api/clone', cloneRouter);
   app.use('/api/market-position', marketPositionRouter);
+  app.use('/api/videos', videosRouter);
   app.use('/public', publicRouter);
   app.use('/api/v1/widgets', widgetsRouter);
   app.use('/api/v1/embed', embedRouter);

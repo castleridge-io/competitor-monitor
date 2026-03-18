@@ -117,6 +117,36 @@ export const battlecards = sqliteTable('battlecards', {
   updatedAt: integer('updated_at', { mode: 'timestamp' }).notNull(),
 });
 
+// Videos table for AI-generated weekly digest videos
+export const videos = sqliteTable('videos', {
+  id: text('id').primaryKey(),
+  userId: text('user_id').notNull().references(() => users.id),
+  title: text('title').notNull(),
+  script: text('script').notNull(),
+  videoUrl: text('video_url'),
+  thumbnailUrl: text('thumbnail_url'),
+  duration: integer('duration'), // Duration in seconds
+  status: text('status').notNull().default('pending'), // 'pending' | 'processing' | 'completed' | 'failed'
+  error: text('error'), // Error message if failed
+  provider: text('provider').notNull().default('heygen'), // 'heygen' | 'tavus'
+  providerVideoId: text('provider_video_id'), // External video ID from provider
+  metadata: text('metadata'), // JSON string for additional data
+  createdAt: integer('created_at', { mode: 'timestamp' }).notNull(),
+  completedAt: integer('completed_at', { mode: 'timestamp' }),
+});
+
+// Video segments table for multi-competitor segments
+export const videoSegments = sqliteTable('video_segments', {
+  id: text('id').primaryKey(),
+  videoId: text('video_id').notNull().references(() => videos.id),
+  competitorId: text('competitor_id').notNull().references(() => competitors.id),
+  order: integer('order').notNull(), // Order in video
+  script: text('script').notNull(),
+  startTime: integer('start_time'), // Start time in seconds
+  endTime: integer('end_time'), // End time in seconds
+  createdAt: integer('created_at', { mode: 'timestamp' }).notNull(),
+});
+
 // Relations
 export const competitorsRelations = relations(competitors, ({ many }) => ({
   scrapes: many(scrapes),
@@ -186,6 +216,25 @@ export const battlecardsRelations = relations(battlecards, ({ one }) => ({
   }),
 }));
 
+export const videosRelations = relations(videos, ({ one, many }) => ({
+  user: one(users, {
+    fields: [videos.userId],
+    references: [users.id],
+  }),
+  segments: many(videoSegments),
+}));
+
+export const videoSegmentsRelations = relations(videoSegments, ({ one }) => ({
+  video: one(videos, {
+    fields: [videoSegments.videoId],
+    references: [videos.id],
+  }),
+  competitor: one(competitors, {
+    fields: [videoSegments.competitorId],
+    references: [competitors.id],
+  }),
+}));
+
 // Type exports
 export type Competitor = typeof competitors.$inferSelect;
 export type NewCompetitor = typeof competitors.$inferInsert;
@@ -209,3 +258,7 @@ export type ApiKey = typeof apiKeys.$inferSelect;
 export type NewApiKey = typeof apiKeys.$inferInsert;
 export type Battlecard = typeof battlecards.$inferSelect;
 export type NewBattlecard = typeof battlecards.$inferInsert;
+export type Video = typeof videos.$inferSelect;
+export type NewVideo = typeof videos.$inferInsert;
+export type VideoSegment = typeof videoSegments.$inferSelect;
+export type NewVideoSegment = typeof videoSegments.$inferInsert;
