@@ -121,3 +121,78 @@ export interface NewFeatureGapAnalysis {
   competitorId: string
   userFeatures: string[]
 }
+
+// Battlecard types
+export interface PricingComparison {
+  competitor: string
+  ours: string
+  difference: string
+  analysis: string
+}
+
+export interface FeatureComparison {
+  feature: string
+  competitor: boolean
+  ours: boolean
+  notes?: string
+}
+
+export interface Battlecard {
+  id: string
+  competitorId: string
+  competitorName?: string
+  title: string
+  summary: string
+  strengths: string[]
+  weaknesses: string[]
+  pricing: PricingComparison
+  features: FeatureComparison[]
+  winStrategies: string[]
+  createdAt: string | Date
+  updatedAt: string | Date
+}
+
+export interface NewBattlecard {
+  competitorId: string
+}
+
+export interface UpdateBattlecard {
+  title?: string
+  summary?: string
+  strengths?: string[]
+  weaknesses?: string[]
+  pricing?: PricingComparison
+  features?: FeatureComparison[]
+  winStrategies?: string[]
+}
+
+// Timeline types
+export interface TimelineChangeDetail {
+  field: string
+  oldValue: unknown
+  newValue: unknown
+}
+
+export type TimelineEventType = 'price_change' | 'feature_change' | 'availability_change' | 'new_scrape' | 'other'
+
+export interface TimelineEvent {
+  id: string
+  competitorId: string
+  competitorName: string
+  competitorUrl: string
+  type: TimelineEventType
+  title: string
+  description: string
+  narrative: string
+  previousData: Record<string, unknown> | null
+  currentData: Record<string, unknown>
+  changeDetails: TimelineChangeDetail[]
+  scrapedAt: Date
+}
+
+export interface TimelineFilters {
+  competitorId?: string
+  startDate?: string
+  endDate?: string
+  type?: TimelineEventType | 'all'
+}

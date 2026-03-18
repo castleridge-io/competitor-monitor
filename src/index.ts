@@ -29,6 +29,8 @@ async function start() {
   const { default: apiKeysRouter } = await import('./routes/api-keys.js');
   const { default: publicApiRouter } = await import('./routes/public-api.js');
   const { default: docsRouter } = await import('./routes/api-docs.js');
+  const { default: battlecardsRouter } = await import('./routes/battlecards.js');
+  const { default: timelineRouter } = await import('./routes/timeline.js');
   const { authenticateApiKey } = await import('./middleware/auth.js');
   const { rateLimiter } = await import('./middleware/rate-limiter.js');
 
@@ -41,6 +43,8 @@ async function start() {
   app.use('/api/trends', trendsRouter);
   app.use('/api/gaps', gapsRouter);
   app.use('/api/billing', billingRouter);
+  app.use('/api/battlecards', battlecardsRouter);
+  app.use('/api/timeline', timelineRouter);
   app.use('/public', publicRouter);
 
   // Health check

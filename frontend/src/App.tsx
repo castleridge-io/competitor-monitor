@@ -10,6 +10,8 @@ import { TrendsPage } from './pages/TrendsPage'
 import { GapsPage } from './pages/GapsPage'
 import { PricingPage } from './pages/PricingPage'
 import { BillingPage } from './pages/BillingPage'
+import { BattlecardsPage } from './pages/BattlecardsPage'
+import { TimelinePage } from './pages/TimelinePage'
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { isAuthenticated } = useAuthContext()
@@ -51,10 +53,26 @@ function AppRoutes() {
           }
         />
         <Route
+          path="timeline"
+          element={
+            <ProtectedRoute>
+              <TimelinePage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
           path="gaps"
           element={
             <ProtectedRoute>
               <GapsPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="battlecards"
+          element={
+            <ProtectedRoute>
+              <BattlecardsPage />
             </ProtectedRoute>
           }
         />

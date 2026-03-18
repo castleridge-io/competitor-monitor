@@ -7,6 +7,11 @@ import type {
   Scrape,
   Subscription,
   NewSubscription,
+  Battlecard,
+  NewBattlecard,
+  UpdateBattlecard,
+  TimelineEvent,
+  TimelineFilters,
 } from '../types'
 
 const API_BASE = '/api'
@@ -212,5 +217,78 @@ export const apiClient = {
       headers: getHeaders(),
     })
     return handleResponse<FeatureGap[]>(response)
+  },
+
+  // Battlecards
+  async getBattlecards(): Promise<Battlecard[]> {
+    const response = await fetch(`${API_BASE}/battlecards`, {
+      headers: getHeaders(),
+    })
+    return handleResponse<Battlecard[]>(response)
+  },
+
+  async getBattlecard(id: string): Promise<Battlecard> {
+    const response = await fetch(`${API_BASE}/battlecards/${id}`, {
+      headers: getHeaders(),
+    })
+    return handleResponse<Battlecard>(response)
+  },
+
+  async getBattlecardsForCompetitor(competitorId: string): Promise<Battlecard[]> {
+    const response = await fetch(`${API_BASE}/battlecards/competitor/${competitorId}`, {
+      headers: getHeaders(),
+    })
+    return handleResponse<Battlecard[]>(response)
+  },
+
+  async generateBattlecard(data: NewBattlecard): Promise<Battlecard> {
+    const response = await fetch(`${API_BASE}/battlecards/generate`, {
+      method: 'POST',
+      headers: getHeaders(),
+      body: JSON.stringify(data),
+    })
+    return handleResponse<Battlecard>(response)
+  },
+
+  async updateBattlecard(id: string, data: UpdateBattlecard): Promise<Battlecard> {
+    const response = await fetch(`${API_BASE}/battlecards/${id}`, {
+      method: 'PUT',
+      headers: getHeaders(),
+      body: JSON.stringify(data),
+    })
+    return handleResponse<Battlecard>(response)
+  },
+
+  async deleteBattlecard(id: string): Promise<void> {
+    const response = await fetch(`${API_BASE}/battlecards/${id}`, {
+      method: 'DELETE',
+      headers: getHeaders(),
+    })
+    if (!response.ok) {
+      throw new Error(response.statusText || 'Delete failed')
+    }
+  },
+
+  // Timeline
+  async getTimelineEvents(filters?: TimelineFilters): Promise<TimelineEvent[]> {
+    const queryParts: string[] = []
+    if (filters?.competitorId) {
+      queryParts.push(`competitorId=${encodeURIComponent(filters.competitorId)}`)
+    }
+    if (filters?.startDate) {
+      queryParts.push(`startDate=${encodeURIComponent(filters.startDate)}`)
+    }
+    if (filters?.endDate) {
+      queryParts.push(`endDate=${encodeURIComponent(filters.endDate)}`)
+    }
+    if (filters?.type && filters.type !== 'all') {
+      queryParts.push(`type=${encodeURIComponent(filters.type)}`)
+    }
+
+    const queryString = queryParts.length > 0 ? `?${queryParts.join('&')}` : ''
+    const response = await fetch(`${API_BASE}/timeline${queryString}`, {
+      headers: getHeaders(),
+    })
+    return handleResponse<TimelineEvent[]>(response)
   },
 }

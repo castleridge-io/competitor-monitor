@@ -76,8 +76,18 @@ export function Layout() {
                   </NavLink>
                 </li>
                 <li>
+                  <NavLink to="/dashboard/timeline" className={navLinkClass}>
+                    Timeline
+                  </NavLink>
+                </li>
+                <li>
                   <NavLink to="/dashboard/gaps" className={navLinkClass}>
                     Feature Gaps
+                  </NavLink>
+                </li>
+                <li>
+                  <NavLink to="/dashboard/battlecards" className={navLinkClass}>
+                    Battlecards
                   </NavLink>
                 </li>
                 <li>
