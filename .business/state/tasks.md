@@ -81,10 +81,13 @@
 - **Notes:** Successfully recreated with F013 conflicts resolved. Grammy bot with /start, /enable, /disable, /status commands. Integrated with scheduler for real-time alerts. 113+ tests passing.
 
 ### TASK-F-010: Public REST API
-- **Status:** 🔲 Ready
+- **Status:** 🔲 Ready for Review
 - **Priority:** P1
 - **Estimate:** 2-3 days
-- **Notes:** API docs, authentication, rate limiting
+- **Started:** 2026-03-17 22:30 HKT
+- **Completed:** 2026-03-18 08:49 HKT
+- **PR:** #11 (2026-03-18)
+- **Notes:** All 246 tests passing. Fixed auth middleware (API key length 72 chars), ownership check in /:id/usage, public API middleware, swagger-ui setup. Features: auth middleware, rate limiter, API key management, public endpoints, OpenAPI docs.
 
 ### TASK-F-011: Stripe Billing Integration
 - **Status:** ✅ Complete
