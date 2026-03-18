@@ -148,20 +148,24 @@
 - **Notes:** AI-generated battlecards from scraped competitor data. Database schema, backend API, service, frontend page, 100+ tests.
 
 ### TASK-F-017: Embed Widgets
-- **Status:** 🔲 Ready
+- **Status:** ✅ Complete
 - **Priority:** P1
 - **Estimate:** 2-3 days
-- **Notes:** "Powered by Competitor Monitor" embeddable widgets
+- **Started:** 2026-03-18 15:07 HKT
+- **Completed:** 2026-03-18 15:28 HKT
+- **Merged:** PR #17 (2026-03-18)
+- **Notes:** Embeddable widgets with price badges, mini timeline, competitor comparison cards. Backend embed routes, frontend widget components, 100+ tests.
 
 ---
 
 ## Differentiators (Phase 3)
 
 ### TASK-F-018: One-Click Competitor Cloning
-- **Status:** 🔲 Ready
+- **Status:** 🔄 In Progress
 - **Priority:** P2
 - **Estimate:** 5-7 days
-- **Notes:** Import competitor URL → auto-detect features → gap report
+- **Started:** 2026-03-18 15:51 HKT
+- **Notes:** Import competitor URL → auto-detect features → gap report. Agent spawned to implement backend routes, frontend UI, and tests.
 
 ### TASK-F-019: Market Position Maps
 - **Status:** 🔲 Ready
@@ -204,10 +208,10 @@
 | Category | Count |
 |----------|-------|
 | Total | 23 tasks |
-| Complete | 15 |
+| Complete | 16 |
 | In Progress | 0 |
 | Blocked | 2 |
-| Ready | 6 |
+| Ready | 5 |
 | Backlog | 3 |
 
-**Updated:** 2026-03-18 12:48 HKT
+**Updated:** 2026-03-18 15:50 HKT
