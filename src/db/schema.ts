@@ -102,6 +102,21 @@ export const apiKeys = sqliteTable('api_keys', {
   revokedAt: integer('revoked_at', { mode: 'timestamp' }),
 });
 
+// Battlecards table for competitive battlecards
+export const battlecards = sqliteTable('battlecards', {
+  id: text('id').primaryKey(),
+  competitorId: text('competitor_id').notNull().references(() => competitors.id),
+  title: text('title').notNull(),
+  summary: text('summary').notNull(),
+  strengths: text('strengths').notNull(), // JSON array of strings
+  weaknesses: text('weaknesses').notNull(), // JSON array of strings
+  pricing: text('pricing').notNull(), // JSON pricing comparison
+  features: text('features').notNull(), // JSON feature comparison
+  winStrategies: text('win_strategies').notNull(), // JSON array of strings
+  createdAt: integer('created_at', { mode: 'timestamp' }).notNull(),
+  updatedAt: integer('updated_at', { mode: 'timestamp' }).notNull(),
+});
+
 // Relations
 export const competitorsRelations = relations(competitors, ({ many }) => ({
   scrapes: many(scrapes),
@@ -164,6 +179,13 @@ export const apiKeysRelations = relations(apiKeys, ({ one }) => ({
   }),
 }));
 
+export const battlecardsRelations = relations(battlecards, ({ one }) => ({
+  competitor: one(competitors, {
+    fields: [battlecards.competitorId],
+    references: [competitors.id],
+  }),
+}));
+
 // Type exports
 export type Competitor = typeof competitors.$inferSelect;
 export type NewCompetitor = typeof competitors.$inferInsert;
@@ -185,3 +207,5 @@ export type BillingSubscription = typeof billingSubscriptions.$inferSelect;
 export type NewBillingSubscription = typeof billingSubscriptions.$inferInsert;
 export type ApiKey = typeof apiKeys.$inferSelect;
 export type NewApiKey = typeof apiKeys.$inferInsert;
+export type Battlecard = typeof battlecards.$inferSelect;
+export type NewBattlecard = typeof battlecards.$inferInsert;
