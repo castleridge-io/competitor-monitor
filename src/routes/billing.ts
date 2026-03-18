@@ -16,7 +16,7 @@ if (!stripeSecretKey) {
 }
 
 const stripe = new Stripe(stripeSecretKey, {
-  apiVersion: '2024-11-20.acacia',
+  apiVersion: '2026-02-25.clover',
 });
 
 // Subscription tier configuration
@@ -229,7 +229,7 @@ router.post('/webhook', async (req, res) => {
 
         // Get subscription details for period end
         const subscription = await stripe.subscriptions.retrieve(stripeSubscriptionId);
-        const currentPeriodEnd = new Date(subscription.current_period_end * 1000);
+        const currentPeriodEnd = new Date((subscription as any).current_period_end * 1000);
 
         // Update user subscription tier
         await db.update(users)
@@ -269,7 +269,7 @@ router.post('/webhook', async (req, res) => {
         const subscription = event.data.object as Stripe.Subscription;
         const stripeSubscriptionId = subscription.id;
         const status = subscription.status;
-        const currentPeriodEnd = new Date(subscription.current_period_end * 1000);
+        const currentPeriodEnd = new Date((subscription as any).current_period_end * 1000);
 
         const existingSub = await db.select()
           .from(billingSubscriptions)

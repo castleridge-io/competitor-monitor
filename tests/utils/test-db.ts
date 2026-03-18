@@ -137,6 +137,18 @@ export async function setupTestDatabase(): Promise<void> {
       updated_at INTEGER NOT NULL
     )
   `);
+
+  sqlite.run(`
+    CREATE TABLE IF NOT EXISTS api_keys (
+      id TEXT PRIMARY KEY,
+      user_id TEXT NOT NULL,
+      key_hash TEXT NOT NULL UNIQUE,
+      name TEXT NOT NULL,
+      created_at INTEGER NOT NULL,
+      last_used_at INTEGER,
+      revoked_at INTEGER
+    )
+  `);
 }
 
 export function teardownTestDatabase(): void {
@@ -350,5 +362,38 @@ export async function createTestBillingSubscription(overrides: Partial<{
     stripeSubscriptionId: overrides.stripeSubscriptionId || `sub_${Date.now()}`,
     status: overrides.status || 'active',
     currentPeriodEnd: overrides.currentPeriodEnd || new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+  };
+}
+
+// Helper to create test API key
+export async function createTestApiKey(overrides: Partial<{
+  id: string;
+  userId: string;
+  keyHash: string;
+  name: string;
+  lastUsedAt: Date | null;
+  revokedAt: Date | null;
+}> = {}) {
+  const db = getTestDb();
+  const id = overrides.id || `apikey-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+  const now = new Date();
+
+  await db.insert(schema.apiKeys).values({
+    id,
+    userId: overrides.userId || '',
+    keyHash: overrides.keyHash || `hash-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+    name: overrides.name || 'Test API Key',
+    createdAt: now,
+    lastUsedAt: overrides.lastUsedAt !== undefined ? overrides.lastUsedAt : null,
+    revokedAt: overrides.revokedAt !== undefined ? overrides.revokedAt : null,
+  });
+
+  return {
+    id,
+    userId: overrides.userId || '',
+    keyHash: overrides.keyHash || `hash-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+    name: overrides.name || 'Test API Key',
+    lastUsedAt: overrides.lastUsedAt !== undefined ? overrides.lastUsedAt : null,
+    revokedAt: overrides.revokedAt !== undefined ? overrides.revokedAt : null,
   };
 }

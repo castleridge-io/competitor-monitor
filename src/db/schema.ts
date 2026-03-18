@@ -91,6 +91,17 @@ export const billingSubscriptions = sqliteTable('billing_subscriptions', {
   updatedAt: integer('updated_at', { mode: 'timestamp' }).notNull(),
 });
 
+// API Keys table for public API access
+export const apiKeys = sqliteTable('api_keys', {
+  id: text('id').primaryKey(),
+  userId: text('user_id').notNull().references(() => users.id),
+  keyHash: text('key_hash').notNull().unique(),
+  name: text('name').notNull(),
+  createdAt: integer('created_at', { mode: 'timestamp' }).notNull(),
+  lastUsedAt: integer('last_used_at', { mode: 'timestamp' }),
+  revokedAt: integer('revoked_at', { mode: 'timestamp' }),
+});
+
 // Relations
 export const competitorsRelations = relations(competitors, ({ many }) => ({
   scrapes: many(scrapes),
@@ -146,6 +157,13 @@ export const billingSubscriptionsRelations = relations(billingSubscriptions, ({ 
   }),
 }));
 
+export const apiKeysRelations = relations(apiKeys, ({ one }) => ({
+  user: one(users, {
+    fields: [apiKeys.userId],
+    references: [users.id],
+  }),
+}));
+
 // Type exports
 export type Competitor = typeof competitors.$inferSelect;
 export type NewCompetitor = typeof competitors.$inferInsert;
@@ -165,3 +183,5 @@ export type User = typeof users.$inferSelect;
 export type NewUser = typeof users.$inferInsert;
 export type BillingSubscription = typeof billingSubscriptions.$inferSelect;
 export type NewBillingSubscription = typeof billingSubscriptions.$inferInsert;
+export type ApiKey = typeof apiKeys.$inferSelect;
+export type NewApiKey = typeof apiKeys.$inferInsert;

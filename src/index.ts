@@ -26,6 +26,11 @@ async function start() {
   const { default: trendsRouter } = await import('./routes/trends.js');
   const { default: gapsRouter } = await import('./routes/gaps.js');
   const { default: billingRouter } = await import('./routes/billing.js');
+  const { default: apiKeysRouter } = await import('./routes/api-keys.js');
+  const { default: publicApiRouter } = await import('./routes/public-api.js');
+  const { default: docsRouter } = await import('./routes/api-docs.js');
+  const { authenticateApiKey } = await import('./middleware/auth.js');
+  const { rateLimiter } = await import('./middleware/rate-limiter.js');
 
   // Routes
   app.use('/api/competitors', competitorsRouter);
