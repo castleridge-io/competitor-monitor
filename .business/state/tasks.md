@@ -139,11 +139,12 @@
 - **Notes:** Visual timeline of all changes with AI annotations. Backend route + frontend TimelinePage component. 534+ new tests.
 
 ### TASK-F-016: Battlecard Generator
-- **Status:** 🔄 In Progress
+- **Status:** ✅ Complete
 - **Priority:** P1
 - **Estimate:** 3-5 days
 - **Started:** 2026-03-18 11:57 HKT
-- **PR:** #16 (pending merge)
+- **Completed:** 2026-03-18 12:47 HKT
+- **Merged:** PR #16 (2026-03-18)
 - **Notes:** AI-generated battlecards from scraped competitor data. Database schema, backend API, service, frontend page, 100+ tests.
 
 ### TASK-F-017: Embed Widgets
@@ -203,10 +204,10 @@
 | Category | Count |
 |----------|-------|
 | Total | 23 tasks |
-| Complete | 14 |
-| In Progress | 1 |
+| Complete | 15 |
+| In Progress | 0 |
 | Blocked | 2 |
 | Ready | 6 |
 | Backlog | 3 |
 
-**Updated:** 2026-03-18 12:40 HKT
+**Updated:** 2026-03-18 12:48 HKT
