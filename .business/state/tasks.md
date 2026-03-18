@@ -1,6 +1,6 @@
 # Product F: Competitor Monitor - Tasks
 
-**Updated:** 2026-03-17
+**Updated:** 2026-03-18
 
 ---
 
@@ -103,7 +103,7 @@
 - **Priority:** P2
 - **Estimate:** 1 day
 - **Started:** 2026-03-18 09:18 HKT
-- **Completed:** 2026-03-18 09:45 HKT
+- **Completed:** 2026-03-18 11:00 HKT
 - **Merged:** PR #12 (2026-03-18)
 - **Notes:** Applied rate limiter to all public API routes. Middleware existed but wasn't applied. Critical security fix.
 
@@ -143,7 +143,7 @@
 - **Priority:** P1
 - **Estimate:** 3-5 days
 - **Started:** 2026-03-18 11:57 HKT
-- **PR:** #15 (pending review)
+- **PR:** #16 (pending merge)
 - **Notes:** AI-generated battlecards from scraped competitor data. Database schema, backend API, service, frontend page, 100+ tests.
 
 ### TASK-F-017: Embed Widgets
@@ -209,4 +209,4 @@
 | Ready | 6 |
 | Backlog | 3 |
 
-**Updated:** 2026-03-18 11:57 HKT
+**Updated:** 2026-03-18 12:40 HKT

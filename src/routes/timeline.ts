@@ -229,8 +229,10 @@ router.get('/:id', async (req, res) => {
     const previousScrapeResult = await db
       .select()
       .from(scrapes)
-      .where(eq(scrapes.competitorId, scrape.competitorId))
-      .where(lte(scrapes.scrapedAt, scrape.createdAt))
+      .where(and(
+        eq(scrapes.competitorId, scrape.competitorId),
+        lte(scrapes.scrapedAt, scrape.createdAt)
+      ))
       .orderBy(desc(scrapes.scrapedAt))
       .limit(2);
 
