@@ -140,3 +140,14 @@ export interface TimelineResponse {
   pageSize: number
   totalPages: number
 }
+
+// Market position types
+export interface MarketPosition {
+  id: string
+  name: string
+  x: number // normalized price (0-100)
+  y: number // normalized feature count (0-100)
+  quadrant: 'Budget' | 'Premium' | 'Value' | 'Enterprise'
+  avgPrice: number
+  featureCount: number
+}

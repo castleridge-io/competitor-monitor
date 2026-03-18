@@ -161,18 +161,22 @@
 ## Differentiators (Phase 3)
 
 ### TASK-F-018: One-Click Competitor Cloning
-- **Status:** 🔄 In Progress (PR #18)
+- **Status:** ✅ Complete
 - **Priority:** P2
 - **Estimate:** 5-7 days
 - **Started:** 2026-03-18 15:51 HKT
-- **PR:** https://github.com/castleridge-io/competitor-monitor/pull/18
-- **Notes:** Import competitor URL → auto-detect features → gap report. Implementation complete (2,396 lines), awaiting merge.
+- **Completed:** 2026-03-18 17:28 HKT
+- **Merged:** PR #18 (2026-03-18)
+- **Notes:** Import competitor URL → auto-detect features → gap report. Implementation complete (2,396 lines, 8 files).
 
 ### TASK-F-019: Market Position Maps
-- **Status:** 🔲 Ready
+- **Status:** ✅ Complete
 - **Priority:** P2
 - **Estimate:** 3-4 days
-- **Notes:** Auto-generated 2x2 positioning charts
+- **Started:** 2026-03-18 17:28 HKT
+- **Completed:** 2026-03-18 18:55 HKT
+- **PR:** #19 (pending merge)
+- **Notes:** Auto-generated 2x2 positioning charts. API returns normalized x/y coordinates with quadrant assignment. 11 tests passing.
 
 ### TASK-F-020: Weekly Digest Videos
 - **Status:** 🔲 Ready

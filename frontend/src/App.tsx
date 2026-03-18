@@ -13,6 +13,7 @@ import { BillingPage } from './pages/BillingPage'
 import { EmbedPage } from './pages/EmbedPage'
 import { TimelinePage } from './pages/TimelinePage'
 import { ClonePage } from './pages/ClonePage'
+import { MarketPositionPage } from './pages/MarketPositionPage'
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { isAuthenticated } = useAuthContext()
@@ -66,6 +67,14 @@ function AppRoutes() {
           element={
             <ProtectedRoute>
               <GapsPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="market-position"
+          element={
+            <ProtectedRoute>
+              <MarketPositionPage />
             </ProtectedRoute>
           }
         />

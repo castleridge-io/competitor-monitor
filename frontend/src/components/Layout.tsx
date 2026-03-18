@@ -76,6 +76,11 @@ export function Layout() {
                   </NavLink>
                 </li>
                 <li>
+                  <NavLink to="/dashboard/market-position" className={navLinkClass}>
+                    Market Position
+                  </NavLink>
+                </li>
+                <li>
                   <NavLink to="/dashboard/gaps" className={navLinkClass}>
                     Feature Gaps
                   </NavLink>
