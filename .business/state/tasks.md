@@ -179,10 +179,13 @@
 - **Notes:** Auto-generated 2x2 positioning charts. API returns normalized x/y coordinates with quadrant assignment. 11 tests passing.
 
 ### TASK-F-020: Weekly Digest Videos
-- **Status:** 🔲 Ready
+- **Status:** ✅ Complete
 - **Priority:** P2
 - **Estimate:** 5-7 days
-- **Notes:** AI video summaries (HeyGen/Tavus integration)
+- **Started:** 2026-03-18 20:38 HKT
+- **Completed:** 2026-03-18 21:02 HKT
+- **PR:** #20 (pending merge)
+- **Notes:** AI-generated weekly digest videos using HeyGen/Tavus API. Database schema, backend API, frontend page, scheduler integration, 29 tests passing.
 
 ---
 
@@ -213,10 +216,10 @@
 | Category | Count |
 |----------|-------|
 | Total | 23 tasks |
-| Complete | 16 |
+| Complete | 17 |
 | In Progress | 1 |
 | Blocked | 2 |
-| Ready | 4 |
+| Ready | 3 |
 | Backlog | 3 |
 
-**Updated:** 2026-03-18 16:48 HKT
+**Updated:** 2026-03-18 21:02 HKT
