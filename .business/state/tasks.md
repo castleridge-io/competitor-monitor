@@ -161,11 +161,12 @@
 ## Differentiators (Phase 3)
 
 ### TASK-F-018: One-Click Competitor Cloning
-- **Status:** 🔄 In Progress
+- **Status:** 🔄 In Progress (PR #18)
 - **Priority:** P2
 - **Estimate:** 5-7 days
 - **Started:** 2026-03-18 15:51 HKT
-- **Notes:** Import competitor URL → auto-detect features → gap report. Agent spawned to implement backend routes, frontend UI, and tests.
+- **PR:** https://github.com/castleridge-io/competitor-monitor/pull/18
+- **Notes:** Import competitor URL → auto-detect features → gap report. Implementation complete (2,396 lines), awaiting merge.
 
 ### TASK-F-019: Market Position Maps
 - **Status:** 🔲 Ready
@@ -209,9 +210,9 @@
 |----------|-------|
 | Total | 23 tasks |
 | Complete | 16 |
-| In Progress | 0 |
+| In Progress | 1 |
 | Blocked | 2 |
-| Ready | 5 |
+| Ready | 4 |
 | Backlog | 3 |
 
-**Updated:** 2026-03-18 15:50 HKT
+**Updated:** 2026-03-18 16:48 HKT
