@@ -104,7 +104,7 @@ router.post('/checkout', async (req, res) => {
 
   try {
     // Find or create user
-    let user = await db.select().from(users).where(eq(users.email, email)).limit(1);
+    const user = await db.select().from(users).where(eq(users.email, email)).limit(1);
 
     let userId: string;
     let stripeCustomerId: string | null = null;

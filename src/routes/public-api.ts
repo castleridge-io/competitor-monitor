@@ -4,6 +4,7 @@ import { getDb } from '../db/index.js';
 import { competitors, reports } from '../db/schema.js';
 import { eq, and, desc } from 'drizzle-orm';
 import { authenticateApiKey } from '../middleware/auth.js';
+import { rateLimiter } from '../middleware/rate-limiter.js';
 
 const router: RouterType = Router();
 const db = getDb();
@@ -71,7 +72,7 @@ const db = getDb();
  * @requires API key authentication
  * @returns { competitors: Competitor[], pagination: { total: number, limit: number, offset: number } }
  */
-router.get('/competitors', authenticateApiKey, async (req, res, next) => {
+router.get('/competitors', authenticateApiKey, rateLimiter, async (req, res, next) => {
   try {
     const limit = parseInt(req.query.limit as string || '20', 10);
     const offset = parseInt(req.query.offset as string || '0', 10);
@@ -148,7 +149,7 @@ router.get('/competitors', authenticateApiKey, async (req, res, next) => {
  * @requires API key authentication
  * @returns Competitor
  */
-router.get('/competitors/:id', authenticateApiKey, async (req, res, next) => {
+router.get('/competitors/:id', authenticateApiKey, rateLimiter, async (req, res, next) => {
   try {
     const { id } = req.params;
 
@@ -215,7 +216,7 @@ router.get('/competitors/:id', authenticateApiKey, async (req, res, next) => {
  * @requires API key authentication
  * @returns Report (JSON data only, no HTML)
  */
-router.get('/reports/:id', authenticateApiKey, async (req, res, next) => {
+router.get('/reports/:id', authenticateApiKey, rateLimiter, async (req, res, next) => {
   try {
     const { id } = req.params;
 
