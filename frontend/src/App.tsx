@@ -51,6 +51,14 @@ function AppRoutes() {
           }
         />
         <Route
+          path="timeline"
+          element={
+            <ProtectedRoute>
+              <TimelinePage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
           path="gaps"
           element={
             <ProtectedRoute>
