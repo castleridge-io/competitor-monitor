@@ -253,8 +253,12 @@ describe('Widget Service', () => {
 
     it('should return timeline data for a competitor with narratives', async () => {
       const competitor = await createTestCompetitor({ name: 'Timeline Co' });
-      await createTestNarrative(competitor.id, 'Price increased from $99 to $129');
-      await createTestNarrative(competitor.id, 'Added new API endpoint feature');
+      const now = new Date();
+      const earlier = new Date(now.getTime() - 1000); // 1 second earlier
+      
+      // Create narratives with explicit timestamps to ensure deterministic ordering
+      await createTestNarrative(competitor.id, 'Price increased from $99 to $129', earlier);
+      await createTestNarrative(competitor.id, 'Added new API endpoint feature', now);
 
       const result = await getTimelineData(competitor.id);
 

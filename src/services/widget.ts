@@ -78,7 +78,15 @@ export async function getBadgeData(competitorId: string): Promise<BadgeData | nu
     // Parse the JSON data field
     const scrapeData = typeof latestScrape.data === 'string' ? JSON.parse(latestScrape.data) : latestScrape.data;
     currentPrice = scrapeData?.price || null;
-    lastUpdated = latestScrape.scrapedAt;  // Use the scrape's timestamp
+    // Convert timestamp to Date - handle number, Date, or undefined
+    const scrapedAt = latestScrape.scrapedAt;
+    if (scrapedAt instanceof Date) {
+      lastUpdated = scrapedAt;
+    } else if (typeof scrapedAt === 'number') {
+      lastUpdated = new Date(scrapedAt);
+    } else {
+      lastUpdated = new Date();
+    }
 
     if (scrapes.length > 1 && currentPrice) {
       const previousScrape = scrapes[1];
@@ -153,7 +161,8 @@ export async function getCardData(competitorId: string): Promise<CardData | null
     orderBy: [desc(schema.battlecards.updatedAt)],
   });
 
-  if (battlecard) {
+  // Check if battlecard actually exists (drizzle returns {} instead of null when not found)
+  if (battlecard && battlecard.id) {
     // Parse JSON fields from battlecard
     const strengths = typeof battlecard.strengths === 'string' ? JSON.parse(battlecard.strengths) : battlecard.strengths;
     const weaknesses = typeof battlecard.weaknesses === 'string' ? JSON.parse(battlecard.weaknesses) : battlecard.weaknesses;
@@ -182,7 +191,7 @@ export async function getCardData(competitorId: string): Promise<CardData | null
 
   let features: Array<{ feature: string; competitor: boolean; ours: boolean }> = [];
   let price = '';
-  if (latestScrape) {
+  if (latestScrape && latestScrape.id) {
     const scrapeData = typeof latestScrape.data === 'string' ? JSON.parse(latestScrape.data) : latestScrape.data;
     const scrapeFeatures = scrapeData?.features || [];
     features = Array.isArray(scrapeFeatures) 
@@ -224,17 +233,31 @@ export async function getTimelineData(competitorId: string, limit: number = 5): 
   }
 
   // Get recent narratives ordered by newest first (reverse chronological)
+  // Add secondary sort by id for deterministic ordering when timestamps are equal
   const narratives = await db.query.changeNarratives.findMany({
     where: eq(schema.changeNarratives.competitorId, competitorId),
-    orderBy: [desc(schema.changeNarratives.createdAt)],
+    orderBy: [desc(schema.changeNarratives.createdAt), desc(schema.changeNarratives.id)],
     limit,
   });
 
-  const changes: TimelineChange[] = narratives.map(narrative => ({
-    id: narrative.id,
-    narrative: narrative.narrative,
-    date: narrative.createdAt,
-  }));
+  const changes: TimelineChange[] = narratives.map(narrative => {
+    // Convert timestamp to Date - handle number, Date, or undefined
+    let date: Date;
+    const createdAt = narrative.createdAt;
+    if (createdAt instanceof Date) {
+      date = createdAt;
+    } else if (typeof createdAt === 'number') {
+      date = new Date(createdAt);
+    } else {
+      date = new Date();
+    }
+    
+    return {
+      id: narrative.id,
+      narrative: narrative.narrative,
+      date,
+    };
+  });
 
   return {
     competitorId: competitor.id,
