@@ -175,7 +175,7 @@
 - **Estimate:** 3-4 days
 - **Started:** 2026-03-18 17:28 HKT
 - **Completed:** 2026-03-18 18:55 HKT
-- **PR:** #19 (pending merge)
+- **Merged:** PR #19 (2026-03-18)
 - **Notes:** Auto-generated 2x2 positioning charts. API returns normalized x/y coordinates with quadrant assignment. 11 tests passing.
 
 ### TASK-F-020: Weekly Digest Videos
@@ -184,7 +184,7 @@
 - **Estimate:** 5-7 days
 - **Started:** 2026-03-18 20:38 HKT
 - **Completed:** 2026-03-18 21:02 HKT
-- **PR:** #20 (pending merge)
+- **Merged:** PR #20 (2026-03-18)
 - **Notes:** AI-generated weekly digest videos using HeyGen/Tavus API. Database schema, backend API, frontend page, scheduler integration, 29 tests passing.
 
 ---
